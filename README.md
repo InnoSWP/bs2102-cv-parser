@@ -1,2 +1,2 @@
-# cv-parser
-Software Project group 2 project. CV Parser.
+# bs2102-cv-parser
+BS2102 Software Project. CV Parser.
