@@ -110,12 +110,12 @@ Future retrieveJSON(
     required int pattern,
     required BuildContext context}) async {
   devtools.log("connect to internet");
-  text = "Anvar Iskhakov, Innopolis University";
   http.Response response = await http.post(
       Uri.parse('https://aqueous-anchorage-93443.herokuapp.com/CvParser'),
       headers: {
         "accept": "application/json",
         "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
       },
       body: jsonEncode({
         "text": text,
@@ -126,8 +126,8 @@ Future retrieveJSON(
   if (response.statusCode == 200) {
     return json.decode(response.body);
   }
-  devtools.log("Error happened");
-  return null;
+  devtools.log("Error happened, error code: ${response.statusCode.toString()}");
+  return response.statusCode;
 }
 
 Future<List<Match>> retrieveCV(
