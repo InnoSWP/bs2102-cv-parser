@@ -17,10 +17,36 @@ void main() async {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomePage(),
+      home: const FirstRoute(),
       routes: const {},
     ),
   );
+}
+
+class FirstRoute extends StatelessWidget {
+  const FirstRoute({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color.fromRGBO(251, 253, 247, 1),
+      body: Center(
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              primary: const Color.fromRGBO(127, 75, 36, 1),
+              fixedSize: const Size(330.87, 83)
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const HomePage()),
+            );
+          },
+          child: const Text('PARSE CVs', style: TextStyle(color: Colors.white, fontFamily: 'Eczar', fontSize: 26),),
+        ),
+      ),
+    );
+  }
 }
 
 class HomePage extends StatefulWidget {
