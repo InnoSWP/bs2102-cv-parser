@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
+import 'package:cvparser/constants/colors.dart';
 
 import 'dart:developer' as devtools show log;
 
@@ -47,36 +48,40 @@ class _DropZoneWidgetState extends State<DropZoneWidget> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.cloud_upload_outlined,
-                size: 80,
-                color: Colors.white,
-              ),
-              const Text(
-                'Drop Files Here',
-                style: TextStyle(color: Colors.white, fontSize: 24),
+              const SizedBox(
+                width: 450,
+                height: 86,
+                child: Text(
+                  'Drag and drop your PDF files here or',
+                  style: TextStyle(color: Colors.black, fontFamily: 'Merriweather', fontSize: 26, height: 1.5),
+                  textAlign: TextAlign.center,
+                ),
               ),
               const SizedBox(
-                height: 16,
+                height: 6,
               ),
-              ElevatedButton.icon(
-                onPressed: () async {
-                  // selectFiles();
-                  final events = await controller
-                      .pickFiles(multiple: true, mime: ['application/pdf']);
-                  if (events.isEmpty) return;
-                  uploadFiles(events);
-                },
-                icon: const Icon(Icons.search),
-                label: const Text(
-                  'Choose Files',
-                  style: TextStyle(color: Colors.white, fontSize: 15),
+              SizedBox(
+                width: 203,
+                height: 51,
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    // selectFiles();
+                    final events = await controller
+                        .pickFiles(multiple: true, mime: ['application/pdf']);
+                    if (events.isEmpty) return;
+                    uploadFiles(events);
+                  },
+                  label: const Text(
+                    'UPLOAD PDFs',
+                    style: TextStyle(color: Colors.white, fontFamily: 'Merriweather', fontSize: 16),
+                  ),
+                  icon: const Icon(Icons.download_sharp),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    primary: highlight ? Colors.blue : MainColors.secondColor,
+                  ),
                 ),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  primary: highlight ? Colors.blue : Colors.green.shade300,
-                ),
-              )
+              ),
             ],
           ),
         ),
@@ -138,12 +143,11 @@ class _DropZoneWidgetState extends State<DropZoneWidget> {
   }
 
   Widget buildDecoration({required Widget child}) {
-    final colorBackground = highlight ? Colors.blue : Colors.green;
+    final colorBackground = highlight ? Colors.blue : Colors.white;
     return Container(
-      padding: const EdgeInsets.all(10),
       color: colorBackground,
       child: DottedBorder(
-          color: Colors.white,
+          color: MainColors.secondColor,
           strokeWidth: 2,
           dashPattern: const [8, 4],
           padding: EdgeInsets.zero,

@@ -1,7 +1,8 @@
 import 'package:cvparser/model/file_DataModel.dart';
-import 'package:cvparser/widgets/drop_file_widget.dart';
+//import 'package:cvparser/widgets/drop_file_widget.dart'; When page2 is completed
 import 'package:cvparser/widgets/drop_zone_widget.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'constants/colors.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,7 @@ void main() async {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const FirstRoute(),
+      home: const HomePage(),
       routes: const {},
     ),
   );
@@ -29,11 +30,11 @@ class FirstRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(251, 253, 247, 1),
+      backgroundColor: MainColors.mainColor,
       body: Center(
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-              primary: const Color.fromRGBO(127, 75, 36, 1),
+              primary: MainColors.secondColor,
               fixedSize: const Size(330.87, 83)
           ),
           onPressed: () {
@@ -62,14 +63,24 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MainColors.mainColor,
       body: SingleChildScrollView(
         child: Container(
-            alignment: Alignment.center,
             padding: const EdgeInsets.all(15),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Container(
+                  margin: const EdgeInsets.only(left: 20.0),
+                  alignment: Alignment.topLeft,
+                  child: const Text(
+                    'iExtract',
+                    style: TextStyle(color: MainColors.secondColor, fontFamily: 'Eczar', fontSize: 60, fontWeight: FontWeight.bold),
+                  ),
+                ),
                 SizedBox(
-                  height: 300,
+                  height: 570,
+                  width: 1240,
                   child: DropZoneWidget(
                     // ignore: unnecessary_this
                     onDroppedFiles: (files) =>
@@ -79,7 +90,20 @@ class HomePageState extends State<HomePage> {
                 const SizedBox(
                   height: 20,
                 ),
-                DroppedFileWidget(files: files),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      primary: MainColors.secondColor,
+                      fixedSize: const Size(330.87, 83)
+                  ),
+                  onPressed: () {
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => const HomePage()),
+                    // );
+                    // When page2 is created it is the route
+                  },
+                  child: const Text('PARSE CVs', style: TextStyle(color: Colors.white, fontFamily: 'Eczar', fontSize: 26, fontWeight: FontWeight.w100),),
+                ),
               ],
             )),
       ),
