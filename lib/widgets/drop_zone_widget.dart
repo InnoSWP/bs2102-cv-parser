@@ -1,6 +1,6 @@
-import 'dart:typed_data';
-
-import 'package:cvparser/model/file_DataModel.dart';
+import 'package:cvparser/model/file_model.dart';
+import 'package:cvparser/utils/api_request.dart';
+import 'package:cvparser/utils/delete_folder_content.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -11,11 +11,13 @@ import 'dart:developer' as devtools show log;
 
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 
+import 'package:cvparser/globals.dart' as globals;
+
 class DropZoneWidget extends StatefulWidget {
   const DropZoneWidget({Key? key, required this.onDroppedFiles})
       : super(key: key);
 
-  final ValueChanged<List<File_Data_Model>?> onDroppedFiles;
+  final ValueChanged<List<FileModel>?> onDroppedFiles;
 
   @override
   State<DropZoneWidget> createState() => _DropZoneWidgetState();
@@ -24,6 +26,13 @@ class DropZoneWidget extends StatefulWidget {
 class _DropZoneWidgetState extends State<DropZoneWidget> {
   late DropzoneViewController controller;
   bool highlight = false;
+
+  @override
+  void dispose() {
+    deleteFolderContent();
+    super.dispose();
+    // TODO delete files after leaving the website
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +62,11 @@ class _DropZoneWidgetState extends State<DropZoneWidget> {
                 height: 86,
                 child: Text(
                   'Drag and drop your PDF files here or',
-                  style: TextStyle(color: Colors.black, fontFamily: 'Merriweather', fontSize: 26, height: 1.5),
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontFamily: 'Merriweather',
+                      fontSize: 26,
+                      height: 1.5),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -73,7 +86,10 @@ class _DropZoneWidgetState extends State<DropZoneWidget> {
                   },
                   label: const Text(
                     'UPLOAD PDFs',
-                    style: TextStyle(color: Colors.white, fontFamily: 'Merriweather', fontSize: 16),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Merriweather',
+                        fontSize: 16),
                   ),
                   icon: const Icon(Icons.download_sharp),
                   style: ElevatedButton.styleFrom(
@@ -89,59 +105,6 @@ class _DropZoneWidgetState extends State<DropZoneWidget> {
     ));
   }
 
-  Future uploadFiles(List<dynamic> ev) async {
-    List<File_Data_Model> droppedFiles =
-        List<File_Data_Model>.empty(growable: true);
-
-    for (var event in ev) {
-      devtools.log('$event.runtimeType');
-      var name = event.name;
-      devtools.log('$event.name');
-
-      var mime = await controller.getFileMIME(event);
-      if (mime != 'application/pdf') {
-        throw "Unexpected File Extension";
-      }
-      var byte = await controller.getFileSize(event);
-      var url = await controller.createFileUrl(event);
-
-      var data = await controller.getFileData(event);
-
-      Uint8List fileBytes = await controller.getFileData(event);
-      String fileName = name;
-
-      // Upload file
-      await FirebaseStorage.instance
-          .ref('uploads/$fileName')
-          .putData(fileBytes);
-
-      //Load an existing PDF document.
-      PdfDocument document = PdfDocument(inputBytes: data);
-
-      //Create a new instance of the PdfTextExtractor.
-      PdfTextExtractor extractor = PdfTextExtractor(document);
-
-      //Extract all the text from the document.
-      String text = extractor.extractText();
-
-      devtools.log('Name : $name');
-      devtools.log('Text : $text');
-
-      devtools.log('Mime: $mime');
-
-      devtools.log('Size : ${byte / (1024 * 1024)}');
-      devtools.log('URL: $url');
-      devtools.log('Data: $data');
-
-      droppedFiles.add(File_Data_Model(name: name, text: text));
-
-      widget.onDroppedFiles(droppedFiles);
-      setState(() {
-        highlight = false;
-      });
-    }
-  }
-
   Widget buildDecoration({required Widget child}) {
     final colorBackground = highlight ? Colors.blue : Colors.white;
     return Container(
@@ -153,5 +116,61 @@ class _DropZoneWidgetState extends State<DropZoneWidget> {
           padding: EdgeInsets.zero,
           child: child),
     );
+  }
+
+  Future uploadFiles(List<dynamic> ev) async {
+    deleteFolderContent();
+    DateTime timeUploaded = DateTime.now();
+    globals.sessionHashCode = timeUploaded.hashCode;
+
+    List<FileModel> droppedFiles = List<FileModel>.empty(growable: true);
+
+    for (var event in ev) {
+      var name = event.name;
+
+      var mime = await controller.getFileMIME(event);
+      if (mime != 'application/pdf') {
+        throw "Unexpected File Extension";
+      }
+
+      devtools.log('File $name received');
+
+      var data = await controller.getFileData(event);
+
+      //Load an existing PDF document.
+      PdfDocument document = PdfDocument(inputBytes: data);
+
+      //Create a new instance of the PdfTextExtractor.
+      PdfTextExtractor extractor = PdfTextExtractor(document);
+
+      //Extract all the text from the document.
+      String text = extractor.extractText();
+
+      var jsonFile = await retrieveJSON(
+        text: text,
+        keywords: "string",
+        pattern: 11,
+        context: context,
+      );
+
+      FileModel file = FileModel(
+        name: name,
+        text: jsonFile.toString(),
+        ext: 'json',
+        hashFolder: timeUploaded.hashCode.toInt(),
+      );
+      // Upload file
+      await FirebaseStorage.instance
+          .ref('uploads/${file.hashFolder}/${file.name}.${file.ext}')
+          .putString(file.text);
+
+      droppedFiles.add(file);
+
+      widget.onDroppedFiles(droppedFiles);
+      setState(() {
+        highlight = false;
+      });
+    }
+    devtools.log('Successfully Saved to the database!');
   }
 }
