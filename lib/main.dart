@@ -1,6 +1,6 @@
 import 'package:cvparser/model/file_DataModel.dart';
 
-//import 'package:cvparser/widgets/drop_file_widget.dart';
+import 'package:cvparser/widgets/drop_file_widget.dart';
 import 'package:cvparser/widgets/drop_zone_widget.dart';
 import 'package:cvparser/widgets/search_and_store_files.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -44,7 +44,7 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(80.0), // Size of appBar is 101
+        preferredSize: const Size.fromHeight(101.0), // Size of appBar is 101
         child: AppBar(
           automaticallyImplyLeading: false,           // Removing the 'back button' from navigator.pop()
           elevation: 0,                               // Remove shadow below the appbar
@@ -121,6 +121,10 @@ class HomePageState extends State<HomePage> {
                       ],
                     ),
                   ),
+                  SizedBox(
+                    height: 40.0,
+                  ),
+                  DroppedFileWidget(files: files),
                 ],
               )),
         ),
@@ -177,21 +181,22 @@ class _MainPageState extends State<MainPage> {
       body: SingleChildScrollView(
         child: Container(
             padding: const EdgeInsets.all(15),
-            /*
-            ----------------------------
-            |                 |        |
-            |                 |        |
-            |                 |        |
-            |                 |        |
-            |                 |        |
-            |                 |        |
-            |                 |        |
-            ----------------------------
-            Row division
-             */
             child: Row(
+              /*
+            ----------------------------
+            |                 |        |
+            |                 |        |
+            |                 |        |
+            |                 |        |
+            |                 |        |
+            |                 |        |
+            |                 |        |
+            ----------------------------
+              Row division
+              */
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Column(
                 /*
             ----------------------------
             |                 |        |
@@ -203,10 +208,8 @@ class _MainPageState extends State<MainPage> {
             |                 |        |
             ----------------------------
                  */
-                Column(
-
                 ),
-              const SearchAndStoreFiles(), // For left side (not completed)
+              const SearchAndStoreFiles(), // For right side (not completed)
               ],
             )),
       ),
