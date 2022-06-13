@@ -68,8 +68,9 @@ flutter:
   fonts:
     - family: Eczar
       fonts:
+        - asset: assets/fonts/Eczar-Regular.ttf
         - asset: assets/fonts/Eczar-SemiBold.ttf
-          weight: 400
+          weight: 300
     - family: Merriweather
       fonts:
         - asset: assets/fonts/Merriweather-Regular.ttf
@@ -78,6 +79,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/pdf.png
+    - assets/images/iExtract.jpg
     # - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
