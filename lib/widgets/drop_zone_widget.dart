@@ -63,7 +63,10 @@ class _DropZoneWidgetState extends State<DropZoneWidget> {
               SizedBox(
                 width: 203,
                 height: 51,
-                child: ElevatedButton.icon(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      primary: MainColors.secondColor,
+                      fixedSize: const Size(330.87, 83)),
                   onPressed: () async {
                     // selectFiles();
                     final events = await controller
@@ -71,14 +74,23 @@ class _DropZoneWidgetState extends State<DropZoneWidget> {
                     if (events.isEmpty) return;
                     uploadFiles(events);
                   },
-                  label: const Text(
-                    'UPLOAD PDFs',
-                    style: TextStyle(color: Colors.white, fontFamily: 'Merriweather', fontSize: 16),
-                  ),
-                  icon: const Icon(Icons.download_sharp),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    primary: highlight ? Colors.blue : MainColors.secondColor,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      Text(
+                        'UPLOAD PDFs',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Merriweather',
+                            fontSize: 16,
+                            ),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Icon(Icons.download_sharp),
+                    ],
                   ),
                 ),
               ),
@@ -143,7 +155,7 @@ class _DropZoneWidgetState extends State<DropZoneWidget> {
   }
 
   Widget buildDecoration({required Widget child}) {
-    final colorBackground = highlight ? Colors.blue : Colors.white;
+    final colorBackground = highlight ? MainColors.secondPageBackGround : Colors.white;
     return Container(
       color: colorBackground,
       child: DottedBorder(
