@@ -32,95 +32,92 @@ class _DropZoneWidgetState extends State<DropZoneWidget> {
   bool highlight = false;
 
   @override
-  Future<void> dispose() async {
-    devtools.log('disposed');
-    await deleteFirebaseFolderContent();
-    super.dispose();
-    // TODO delete files after leaving the website
-  }
-
-  @override
   Widget build(BuildContext context) {
     return buildDecoration(
-      child: Stack(
-        children: [
-          DropzoneView(
-            operation: DragOperation.copy,
-            // cursor: CursorType.grab,
-            onCreated: (controller) => this.controller = controller,
-            // process dropping multiple files in the dropzone
-            onDropMultiple: (List<dynamic>? ev) async {
-              // do nothing if no files were returned
-              if (ev?.isEmpty ?? false) return;
-              // upload files to the database
-              await deleteFirebaseFolderContent()
-                  .then((value) async => await uploadFiles(ev!));
-            },
-            onHover: () => setState(() => highlight = true),
-            onLeave: () => setState(() => highlight = false),
-          ),
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  width: 450,
-                  height: 86,
-                  child: Text(
-                    'Drag and drop your PDF files here or',
-                    style: TextStyle(
+        child: Stack(
+      children: [
+        DropzoneView(
+          operation: DragOperation.copy,
+          // cursor: CursorType.grab,
+          onCreated: (controller) => this.controller = controller,
+          // process dropping multiple files in the dropzone
+          onDropMultiple: (List<dynamic>? ev) async {
+            // do nothing if no files were returned
+            if (ev?.isEmpty ?? false) return;
+            // upload files to the database
+            await deleteFirebaseFolderContent()
+                .then((value) async => await uploadFiles(ev!));
+          },
+          onHover: () => setState(() => highlight = true),
+          onLeave: () => setState(() => highlight = false),
+        ),
+        Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(
+                width: 450,
+                height: 86,
+                child: Text(
+                  'Drag and drop your PDF files here or',
+                  style: TextStyle(
                       color: Colors.black,
                       fontFamily: 'Merriweather',
                       fontSize: 26,
-                      height: 1.5,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+                      height: 1.5),
+                  textAlign: TextAlign.center,
                 ),
-                const SizedBox(
-                  height: 6,
-                ),
-                SizedBox(
-                  width: 203,
-                  height: 51,
-                  child: ElevatedButton.icon(
-                    // Button to give additional ability to add files
-                    onPressed: () async {
-                      // Pick files using file explorer
-                      await pickFilesOnPress().then((value) async {
-                        await deleteFirebaseFolderContent();
-                        return value;
-                      }).then((value) async {
-                        if (value == null) return;
-                        await uploadFiles(value);
-                      });
-                    },
-                    label: const Text(
-                      'UPLOAD PDFs',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Merriweather',
-                        fontSize: 16,
+              ),
+              const SizedBox(
+                height: 6,
+              ),
+              SizedBox(
+                width: 203,
+                height: 51,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      primary: MainColors.secondColor,
+                      fixedSize: const Size(330.87, 83)),
+                  onPressed: () async {
+                    // Pick files using file explorer
+                    await pickFilesOnPress().then((value) async {
+                      await deleteFirebaseFolderContent();
+                      return value;
+                    }).then((value) async {
+                      if (value == null) return;
+                      await uploadFiles(value);
+                    });
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      Text(
+                        'UPLOAD PDFs',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Merriweather',
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
-                    icon: const Icon(Icons.download_sharp),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      primary: highlight ? Colors.blue : MainColors.secondColor,
-                    ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Icon(Icons.download_sharp),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ),
+      ],
+    ));
   }
 
   Widget buildDecoration({required Widget child}) {
-    final colorBackground = highlight ? Colors.blue : Colors.white;
-
+    final colorBackground =
+        highlight ? MainColors.secondPageBackGround : Colors.white;
     return Container(
       color: colorBackground,
       child: DottedBorder(
