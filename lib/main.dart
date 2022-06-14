@@ -24,6 +24,7 @@ void main() async {
 
   // TODO figure out how to call function when user closes tab
   html.window.onBeforeUnload.listen((event) async {
+    devtools.log('onBeforeUnload run');
     await deleteFirebaseFolderContent();
   });
 

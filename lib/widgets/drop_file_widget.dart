@@ -1,7 +1,14 @@
+import 'dart:typed_data';
+
 import 'package:cvparser/model/file_model.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
+import 'package:cvparser/globals.dart' as globals;
+
 import 'dart:developer' as devtools show log;
+
+import 'dart:html' as html;
 
 class DroppedFileWidget extends StatelessWidget {
   final List<FileModel>? files;
@@ -24,7 +31,8 @@ class DroppedFileWidget extends StatelessWidget {
 
     return Column(
       children: <Widget>[
-        for (var file in files!) buildFileDetail(file, context),
+        if (files != null)
+          for (var file in files!) buildFileDetail(file, context),
       ],
     );
   }
@@ -39,8 +47,6 @@ class DroppedFileWidget extends StatelessWidget {
   }
 
   Widget buildFileDetail(FileModel? file, BuildContext context) {
-    const style = TextStyle(fontSize: 20);
-    
     return Container(
       margin: const EdgeInsets.only(left: 24),
       child: Column(
@@ -51,7 +57,7 @@ class DroppedFileWidget extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
           ),
           Text(
-            'Name: ${file?.name}',
+            'Name: ${file?.name ?? 'No name'}',
             style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 22),
           ),
           const SizedBox(
@@ -67,9 +73,17 @@ class DroppedFileWidget extends StatelessWidget {
                   title: Text(jsonFile.toString()),
                   actions: [
                     TextButton(
-                      child: const Text('OK'),
-                      onPressed: () {
+                      child: const Text('Download'),
+                      onPressed: () async {
                         //Code for download the image
+                        final storageRef = FirebaseStorage.instance.ref();
+
+                        final jsonUrl = await storageRef
+                            .child(
+                                "uploads/${globals.sessionHashCode}/${file.name}.json")
+                            .getDownloadURL();
+
+                        html.window.open(jsonUrl, "_self");
                       },
                     ),
                   ],
