@@ -4,7 +4,8 @@ import 'package:cvparser/globals.dart' as globals;
 
 import 'dart:developer' as devtools show log;
 
-Future<void> deleteFolderContent() async {
+/// Function to delete all files from the current firebase uploads folder
+Future<void> deleteFirebaseFolderContent() async {
   if (globals.sessionHashCode != null) {
     // handle user  inactive timeout
     await FirebaseStorage.instance

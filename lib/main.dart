@@ -8,16 +8,21 @@ import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer' as devtools show log;
 
+// ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
 void main() async {
+  // allow widgets interaction with the Flutter engine
   WidgetsFlutterBinding.ensureInitialized();
+
+  // connect to Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  // TODO figure out how to call function when user closes tab
   html.window.onBeforeUnload.listen((event) async {
-    deleteFolderContent();
+    await deleteFirebaseFolderContent();
   });
 
   runApp(
@@ -42,8 +47,9 @@ class FirstRoute extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-              primary: MainColors.secondColor,
-              fixedSize: const Size(330.87, 83)),
+            primary: MainColors.secondColor,
+            fixedSize: const Size(330.87, 83),
+          ),
           onPressed: () {
             Navigator.push(
               context,
@@ -53,7 +59,10 @@ class FirstRoute extends StatelessWidget {
           child: const Text(
             'PARSE CVs',
             style: TextStyle(
-                color: Colors.white, fontFamily: 'Eczar', fontSize: 26),
+              color: Colors.white,
+              fontFamily: 'Eczar',
+              fontSize: 26,
+            ),
           ),
         ),
       ),
@@ -72,9 +81,9 @@ class HomePageState extends State<HomePage> {
   List<FileModel>? files;
 
   @override
-  void dispose() {
+  Future<void> dispose() async {
     devtools.log('disposed');
-    deleteFolderContent();
+    await deleteFirebaseFolderContent();
     super.dispose();
     // TODO delete files after leaving the website
   }
@@ -84,63 +93,68 @@ class HomePageState extends State<HomePage> {
     return WillPopScope(
       onWillPop: (() async {
         devtools.log('willPopScope');
-        deleteFolderContent();
+        deleteFirebaseFolderContent();
+
         return true;
       }),
       child: Scaffold(
         backgroundColor: MainColors.mainColor,
         body: SingleChildScrollView(
           child: Container(
-              padding: const EdgeInsets.all(15),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 20.0),
-                    alignment: Alignment.topLeft,
-                    child: const Text(
-                      'iExtract',
-                      style: TextStyle(
-                          color: MainColors.secondColor,
-                          fontFamily: 'Eczar',
-                          fontSize: 60,
-                          fontWeight: FontWeight.bold),
+            padding: const EdgeInsets.all(15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(left: 20.0),
+                  alignment: Alignment.topLeft,
+                  child: const Text(
+                    'iExtract',
+                    style: TextStyle(
+                      color: MainColors.secondColor,
+                      fontFamily: 'Eczar',
+                      fontSize: 60,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(
-                    height: 570,
-                    width: 1240,
-                    child: DropZoneWidget(
-                      // ignore: unnecessary_this
-                      onDroppedFiles: (files) =>
-                          setState(() => this.files = files),
+                ),
+                SizedBox(
+                  height: 570,
+                  width: 1240,
+                  child: DropZoneWidget(
+                    // ignore: unnecessary_this
+                    onProcessFiles: (files) =>
+                        setState(() => this.files = files),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: MainColors.secondColor,
+                    fixedSize: const Size(330.87, 83),
+                  ),
+                  onPressed: () {
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => const HomePage()),
+                    // );
+                    // When page2 is created it is the route
+                  },
+                  child: const Text(
+                    'PARSE CVs',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Eczar',
+                      fontSize: 26,
+                      fontWeight: FontWeight.w100,
                     ),
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        primary: MainColors.secondColor,
-                        fixedSize: const Size(330.87, 83)),
-                    onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => const HomePage()),
-                      // );
-                      // When page2 is created it is the route
-                    },
-                    child: const Text(
-                      'PARSE CVs',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Eczar',
-                          fontSize: 26,
-                          fontWeight: FontWeight.w100),
-                    ),
-                  ),
-                ],
-              )),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
