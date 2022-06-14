@@ -8,6 +8,7 @@ import 'package:cvparser/globals.dart' as globals;
 
 import 'dart:developer' as devtools show log;
 
+// ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
 class DroppedFileWidget extends StatelessWidget {
