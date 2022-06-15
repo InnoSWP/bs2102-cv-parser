@@ -1,21 +1,23 @@
 import 'dart:convert';
 
+import 'package:cvparser/model/custom_exceptions.dart';
 import 'package:http/http.dart' as http;
 
+// ignore: unused_import
 import 'dart:developer' as devtools show log;
 
 /// Sends API request to the server.
 /// Sends [text, keywords, pattern] as request body parameters.
 /// Contents of the JSON response is returned
 /// If status code is different from 200, throws an error as a status code.
-Future retrieveJSON({
+Future<String> retrieveJSON({
   required String text,
   required String keywords,
   required int pattern,
 }) async {
   // Function to send an API request to the server
   http.Response response = await http.post(
-    // Uri.parse('https://aqueous-anchorage-93443.herokuapp.com/CvParser'),
+    // Uri.parse('https://aqueous-anchorage-93443.herokuapp.com/CvParser/'),
     Uri.parse('https://mock-cv-parser-3.herokuapp.com/api/cv_parser/'),
     headers: {
       "accept": "application/json",
@@ -34,8 +36,6 @@ Future retrieveJSON({
     // return json.decode(response.body);
     return response.body;
   }
-  // devtools.log("Error happened, error code: ${response.statusCode.toString()}");
-
   // throw an error of the response code
-  throw response.statusCode.toInt();
+  throw APIResponseException(response.statusCode.toString());
 }
