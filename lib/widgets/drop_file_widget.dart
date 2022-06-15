@@ -84,7 +84,7 @@ class DroppedFileWidget extends StatelessWidget {
                                 "uploads/${globals.sessionHashCode}/${file.name}.json")
                             .getDownloadURL();
 
-                        html.window.open(jsonUrl, "_self");
+                        html.window.open(jsonUrl, "_blank");
                       },
                     ),
                   ],
