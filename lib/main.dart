@@ -31,11 +31,15 @@ void main() async {
   runApp(
     MaterialApp(
       title: 'CV Parser',
+      initialRoute: HomePage.route,
+      routes: {
+        HomePage.route: (context) => const HomePage(),
+        MainPage.route: (context) => const MainPage(),
+      },
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       home: const HomePage(),
-      routes: const {},
     ),
   );
 }
@@ -45,6 +49,7 @@ void main() async {
  */
 
 class HomePage extends StatefulWidget {
+  static const String route = '';
   const HomePage({Key? key}) : super(key: key);
 
   @override
@@ -80,14 +85,19 @@ class HomePageState extends State<HomePage> {
                                           iExtract logo
             I decide to use Text widget instead of Image due to Image bad quality and jpg format
              */
-            child: const Text(
-              'iExtract',
-              style: TextStyle(
-                  color: MainColors.secondColor,
-                  fontFamily: 'Eczar',
-                  fontSize: 60,
-                  fontWeight: FontWeight.bold),
-            ),
+            child: TextButton(
+              child: const Text(
+                'iExtract',
+                style: TextStyle(
+                    color: MainColors.secondColor,
+                    fontFamily: 'Eczar',
+                    fontSize: 60,
+                    fontWeight: FontWeight.bold),
+              ),
+              onPressed: () {
+
+              },
+            )
           ),
         ),
       ),
@@ -95,7 +105,7 @@ class HomePageState extends State<HomePage> {
       body: Center(
         child: SingleChildScrollView(
           child: Container(
-              padding: const EdgeInsets.only(left: 30.0),
+              padding: const EdgeInsets.only(left: 30.0, right: 30.0),
               // Column for Drop zone and Button 'Parse CVs'
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -118,11 +128,7 @@ class HomePageState extends State<HomePage> {
                         fixedSize: const Size(330.87, 83)),
                     // Button 'Parse CVs' will send you to Main Page
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const MainPage()),
-                      );
+                      Navigator.pushNamed(context, MainPage.route);
                     },
                     // 'Parse CVs' button with icon itself
                     child: Row(
@@ -160,6 +166,7 @@ class HomePageState extends State<HomePage> {
   Main Page - page with all main functionality
  */
 class MainPage extends StatefulWidget {
+  static const String route = '/view_cv';
   const MainPage({Key? key}) : super(key: key);
 
   @override
@@ -181,14 +188,19 @@ class _MainPageState extends State<MainPage> {
           flexibleSpace: Container(
             margin: const EdgeInsets.only(left: 30.0),
             alignment: Alignment.topLeft,
-            child: const Text(
-              'iExtract',
-              style: TextStyle(
-                  color: MainColors.secondColor,
-                  fontFamily: 'Eczar',
-                  fontSize: 60,
-                  fontWeight: FontWeight.bold),
-            ),
+              child: TextButton(
+                child: const Text(
+                  'iExtract',
+                  style: TextStyle(
+                      color: MainColors.secondColor,
+                      fontFamily: 'Eczar',
+                      fontSize: 60,
+                      fontWeight: FontWeight.bold),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
           ),
           // second Color border line at the bottom of App Bar
           bottom: PreferredSize(
