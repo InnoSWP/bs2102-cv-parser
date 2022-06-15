@@ -16,7 +16,7 @@ Future retrieveJSON({
   // Function to send an API request to the server
   http.Response response = await http.post(
     // Uri.parse('https://aqueous-anchorage-93443.herokuapp.com/CvParser'),
-    Uri.parse('https://mock-cv-parser-3.herokuapp.com/'),
+    Uri.parse('https://mock-cv-parser-3.herokuapp.com/api/cv_parser/'),
     headers: {
       "accept": "application/json",
       "Content-Type": "application/json",
