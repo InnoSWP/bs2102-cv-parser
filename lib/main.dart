@@ -1,14 +1,13 @@
 import 'package:cvparser/model/file_model.dart';
-import 'package:cvparser/utils/delete_folder_content.dart';
 import 'package:cvparser/widgets/drop_file_widget.dart';
 import 'package:cvparser/widgets/drop_zone_widget.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cvparser/widgets/search_and_store_files.dart';
-//import 'package:cvparser/widgets/drop_file_widget.dart'; When page2 is completed
-import 'package:firebase_core/firebase_core.dart';
+//import 'package:cvparser/widgets/drop_file_
+//widget.dart'; When page2 is completed
 import 'constants/colors.dart';
-import 'firebase_options.dart';
 import 'package:flutter/material.dart';
+// ignore: unused_import
 import 'dart:developer' as devtools show log;
 
 import 'package:cvparser/globals.dart' as globals;
@@ -21,15 +20,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // connect to Firebase
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-  // TODO figure out how to call function when user closes tab
-  html.window.onBeforeUnload.listen((event) async {
-    devtools.log('onBeforeUnload run');
-    await deleteFirebaseFolderContent();
-  });
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
 
   runApp(
     MaterialApp(
@@ -46,11 +39,11 @@ void main() async {
     ),
   );
 }
+
 /*
   HomePage - First Page that user will see when he open the app
   It contains the drop zone for pdf, 'Parse CVs' button and App Bar with logo
  */
-
 class HomePage extends StatefulWidget {
   static const String route = '';
   const HomePage({Key? key}) : super(key: key);
@@ -61,14 +54,6 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   List<FileModel>? files;
-
-  @override
-  Future<void> dispose() async {
-    devtools.log('disposed');
-    await deleteFirebaseFolderContent();
-    super.dispose();
-    // TODO delete files after leaving the website
-  }
 
   @override
   Widget build(BuildContext context) {
