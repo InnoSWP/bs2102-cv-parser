@@ -131,7 +131,7 @@ class HomePageState extends State<HomePage> {
                         fixedSize: const Size(330.87, 83)),
                     // Button 'Parse CVs' will send you to Main Page
                     onPressed: () {
-                      Navigator.pushNamed(context, MainPage.route);
+                      Navigator.pushNamed(context, MainPage.route, arguments: files);
                     },
                     // 'Parse CVs' button with icon itself
                     child: Row(
@@ -166,14 +166,14 @@ class HomePageState extends State<HomePage> {
  */
 class MainPage extends StatefulWidget {
   static const String route = '/view_cv';
-  const MainPage({Key? key}) : super(key: key);
+  final List<FileModel>? files;
+  const MainPage({Key? key, this.files}) : super(key: key);
 
   @override
   State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
-  List<FileModel>? files;
 
   @override
   Widget build(BuildContext context) {
@@ -237,7 +237,19 @@ class _MainPageState extends State<MainPage> {
                     child: ListView(
                       padding: const EdgeInsets.all(8),
                       children: const <Widget>[
-                        Text('      ') // Json text
+                        Text('"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."'
+                            '"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."'
+                            '"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."'
+                            '"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."'
+                            '"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."'
+                            '"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."',
+                          style: TextStyle(
+                              color: MainColors.secondColor,
+                              fontFamily: 'Eczar',
+                              fontSize: 18,
+                              fontWeight: FontWeight.w100),
+                          textAlign: TextAlign.center,
+                        ), // Json text
                       ],
                     ),
                   ),
@@ -319,7 +331,7 @@ class _MainPageState extends State<MainPage> {
                   alignment: Alignment.center,
                   height: 300,
                   width: 300,
-                  child: DroppedFileWidget(files: files),
+                  child: DroppedFileWidget(files: widget.files),
                 ),
                 Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 36),
@@ -361,3 +373,94 @@ class _MainPageState extends State<MainPage> {
     );
   }
 }
+
+class DroppedFileWidget extends StatelessWidget {
+  final List<FileModel>? files;
+  const DroppedFileWidget({Key? key, required this.files}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Expanded(
+          child: buildFiles(context),
+        ),
+      ],
+    );
+  }
+
+  Widget buildFiles(BuildContext context) {
+    if (files == null) return buildEmptyFile('No Selected Files');
+
+    return Column(
+      children: <Widget>[
+        if (files != null)
+          for (var file in files!) buildFileDetail(file, context),
+      ],
+    );
+  }
+
+  Widget buildEmptyFile(String text) {
+    return Container(
+      width: 300,
+      height: 400,
+      color: MainColors.mainColor,
+      child: Center(child: Text(text)),
+    );
+  }
+
+  Widget buildFileDetail(FileModel? file, BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(left: 24),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          const Text(
+            'Selected File Preview ',
+            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
+          ),
+          Text(
+            'Name: ${file?.name ?? 'No name'}',
+            style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 22),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          InkWell(
+            child: Image.asset('images/pdf.png'),
+            onTap: () async {
+              var jsonFile = file!.text;
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text(jsonFile.toString()),
+                  actions: [
+                    TextButton(
+                      child: const Text('Download'),
+                      onPressed: () async {
+                        //Code for download the image
+                        final storageRef = FirebaseStorage.instance.ref();
+
+                        final jsonUrl = await storageRef
+                            .child(
+                            "uploads/${globals.sessionHashCode}/${file.name}.json")
+                            .getDownloadURL();
+
+                        html.window.open(jsonUrl, "_blank");
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
