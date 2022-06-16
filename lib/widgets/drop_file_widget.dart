@@ -2,6 +2,7 @@ import 'dart:convert';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
+import 'package:cvparser/constants/colors.dart';
 import 'package:cvparser/model/file_model.dart';
 import 'package:flutter/material.dart';
 
@@ -37,9 +38,9 @@ class DroppedFileWidget extends StatelessWidget {
 
   Widget buildEmptyFile(String text) {
     return Container(
-      width: 120,
-      height: 120,
-      color: Colors.blue.shade300,
+      width: 300,
+      height: 400,
+      color: MainColors.mainColor,
       child: Center(child: Text(text)),
     );
   }
