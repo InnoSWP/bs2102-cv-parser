@@ -2,6 +2,7 @@ import 'package:cvparser/model/file_model.dart';
 import 'package:cvparser/utils/delete_folder_content.dart';
 import 'package:cvparser/widgets/drop_file_widget.dart';
 import 'package:cvparser/widgets/drop_zone_widget.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cvparser/widgets/search_and_store_files.dart';
 //import 'package:cvparser/widgets/drop_file_widget.dart'; When page2 is completed
 import 'package:firebase_core/firebase_core.dart';
@@ -9,6 +10,8 @@ import 'constants/colors.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer' as devtools show log;
+
+import 'package:cvparser/globals.dart' as globals;
 
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
@@ -150,10 +153,6 @@ class HomePageState extends State<HomePage> {
                       ],
                     ),
                   ),
-                  const SizedBox(
-                    height: 40.0,
-                  ),
-                  DroppedFileWidget(files: files),
                 ],
               )),
         ),
@@ -174,8 +173,11 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  List<FileModel>? files;
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       // The same App Bar as it is in Home Page, but with line below it
       appBar: PreferredSize(
@@ -212,42 +214,149 @@ class _MainPageState extends State<MainPage> {
           ),
         ),
       ),
+
       backgroundColor: MainColors.secondPageBackGround,
-      body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.all(15),
-          child: Row(
-            /*
-            ----------------------------
-            |                 |        |
-            |                 |        |
-            |                 |        |
-            |                 |        |
-            |                 |        |
-            |                 |        |
-            |                 |        |
-            ----------------------------
-              Row division
-              */
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Column(
-                  /*
-            ----------------------------
-            |                 |        |
-            |                 |        |
-            |_________________|        |
-            |                 |        |
-            |                 |        |
-            |_________________|        |
-            |                 |        |
-            ----------------------------
-                 */
+
+      body: Row(
+        children: [
+          Flexible(
+            flex: 4,
+            child: Container(
+              decoration: const BoxDecoration(
+                border: Border(
+                  right: BorderSide(
+                    color: MainColors.secondColor,
+                    width: 3.0,
                   ),
-              const SearchAndStoreFiles(), // For right side (not completed)
-            ],
+                ),
+              ),
+              child: Column(
+                children: [
+                  Flexible(
+                    flex: 5,
+                    child: ListView(
+                      padding: const EdgeInsets.all(8),
+                      children: const <Widget>[
+                        Text('      ') // Json text
+                      ],
+                    ),
+                  ),
+                  Flexible(
+                    flex: 1,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          primary: MainColors.secondPageButtonColor,
+                          fixedSize: const Size(453, 108),
+                          side: const BorderSide(color: MainColors.secondColor)
+                      ),
+                      // Button 'Parse CVs' will send you to Main Page
+                      onPressed: () {
+                        //export json
+                      },
+                      // 'Parse CVs' button with icon itself
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 207,
+                            child: const Text(
+                              'Export as JSON',
+                              style: TextStyle(
+                                  color: MainColors.secondColor,
+                                  fontFamily: 'Eczar',
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.w100),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          const Icon(Icons.download_sharp, size: 80, color: MainColors.secondColor,),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
+          Flexible(
+            flex: 2,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Flexible(
+                        flex: 12,
+                          child: TextField(
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: 'find a skill',
+                            ),
+                          ),
+                      ),
+                      Flexible(
+                        flex: 2,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                primary: MainColors.secondColor,
+                                fixedSize: const Size(10, 50)
+                            ),
+                            onPressed: () {  },
+                            child: const Icon(Icons.search),  //Const size, so when flex the window - icon stay constant
+                          ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  height: 300,
+                  width: 300,
+                  child: DroppedFileWidget(files: files),
+                ),
+                Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 36),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        primary: MainColors.secondPageButtonColor,
+                        fixedSize: const Size(278, 62),
+                        side: const BorderSide(color: MainColors.secondColor)
+                    ),
+                    // Button 'Parse CVs' will send you to Main Page
+                    onPressed: () {
+                      //export json
+                    },
+                    // 'Parse CVs' button with icon itself
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: const [
+                        Text(
+                          'Export as JSON',
+                          style: TextStyle(
+                              color: MainColors.secondColor,
+                              fontFamily: 'Eczar',
+                              fontSize: 24,
+                              fontWeight: FontWeight.w100),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

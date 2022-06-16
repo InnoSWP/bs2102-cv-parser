@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:cvparser/constants/colors.dart';
 import 'package:cvparser/model/file_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -40,9 +41,9 @@ class DroppedFileWidget extends StatelessWidget {
 
   Widget buildEmptyFile(String text) {
     return Container(
-      width: 120,
-      height: 120,
-      color: Colors.blue.shade300,
+      width: 300,
+      height: 400,
+      color: MainColors.mainColor,
       child: Center(child: Text(text)),
     );
   }
