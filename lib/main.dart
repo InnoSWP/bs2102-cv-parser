@@ -48,13 +48,7 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  List<FileModel>? files = [
-    FileModel(name: 'Mock.pdf', text: 'JSON text', ext: '.json'),
-    FileModel(name: 'Mock2.pdf', text: 'JSON text2', ext: '.json'),
-    FileModel(name: 'Mock3.pdf', text: 'JSON text3', ext: '.json'),
-    FileModel(name: 'Mock4.pdf', text: 'JSON text4', ext: '.json'),
-    FileModel(name: 'Mock5.pdf', text: 'JSON text5', ext: '.json'),
-  ];
+  List<FileModel>? files;
 
   @override
   Widget build(BuildContext context) {
