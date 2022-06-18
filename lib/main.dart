@@ -1,16 +1,15 @@
 import 'package:cvparser/model/file_model.dart';
-import 'package:cvparser/widgets/drop_file_widget.dart';
 import 'package:cvparser/widgets/drop_zone_widget.dart';
+import 'package:get/get.dart';
+
+// ignore: for json download button
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:cvparser/widgets/search_and_store_files.dart';
-//import 'package:cvparser/widgets/drop_file_
-//widget.dart'; When page2 is completed
+
 import 'constants/colors.dart';
 import 'package:flutter/material.dart';
+
 // ignore: unused_import
 import 'dart:developer' as devtools show log;
-
-import 'package:cvparser/globals.dart' as globals;
 
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
@@ -27,11 +26,6 @@ void main() async {
   runApp(
     MaterialApp(
       title: 'CV Parser',
-      initialRoute: HomePage.route,
-      routes: {
-        HomePage.route: (context) => const HomePage(),
-        MainPage.route: (context) => const MainPage(),
-      },
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -46,6 +40,7 @@ void main() async {
  */
 class HomePage extends StatefulWidget {
   static const String route = '';
+
   const HomePage({Key? key}) : super(key: key);
 
   @override
@@ -53,7 +48,13 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  List<FileModel>? files;
+  List<FileModel>? files = [
+    FileModel(name: 'Mock.pdf', text: 'JSON text', ext: '.json'),
+    FileModel(name: 'Mock2.pdf', text: 'JSON text2', ext: '.json'),
+    FileModel(name: 'Mock3.pdf', text: 'JSON text3', ext: '.json'),
+    FileModel(name: 'Mock4.pdf', text: 'JSON text4', ext: '.json'),
+    FileModel(name: 'Mock5.pdf', text: 'JSON text5', ext: '.json'),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -61,32 +62,31 @@ class HomePageState extends State<HomePage> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(101.0), // Size of appBar is 101
         child: AppBar(
-          automaticallyImplyLeading:
-              false, // Removing the 'back button' from navigator.pop()
-          elevation: 0, // Remove shadow below the appbar
+          automaticallyImplyLeading: false,
+          // Removing the 'back button' from navigator.pop()
+          elevation: 0,
+          // Remove shadow below the appbar
           backgroundColor: MainColors.mainColor,
-          centerTitle: false, // Remove center alignment for appbar 'title'
+          centerTitle: false,
+          // Remove center alignment for appbar 'title'
           flexibleSpace: Container(
-            margin: const EdgeInsets.only(left: 30.0),
-            alignment: Alignment.bottomLeft,
-            /*
+              margin: const EdgeInsets.only(left: 30.0),
+              alignment: Alignment.bottomLeft,
+              /*
                                           iExtract logo
             I decide to use Text widget instead of Image due to Image bad quality and jpg format
              */
-            child: TextButton(
-              child: const Text(
-                'iExtract',
-                style: TextStyle(
-                    color: MainColors.secondColor,
-                    fontFamily: 'Eczar',
-                    fontSize: 60,
-                    fontWeight: FontWeight.bold),
-              ),
-              onPressed: () {
-
-              },
-            )
-          ),
+              child: TextButton(
+                child: const Text(
+                  'iExtract',
+                  style: TextStyle(
+                      color: MainColors.secondColor,
+                      fontFamily: 'Eczar',
+                      fontSize: 60,
+                      fontWeight: FontWeight.bold),
+                ),
+                onPressed: () {},
+              )),
         ),
       ),
       backgroundColor: MainColors.mainColor,
@@ -116,7 +116,8 @@ class HomePageState extends State<HomePage> {
                         fixedSize: const Size(330.87, 83)),
                     // Button 'Parse CVs' will send you to Main Page
                     onPressed: () {
-                      Navigator.pushNamed(context, MainPage.route, arguments: files);
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => MainPage(files: files)));
                     },
                     // 'Parse CVs' button with icon itself
                     child: Row(
@@ -149,20 +150,67 @@ class HomePageState extends State<HomePage> {
 /*
   Main Page - page with all main functionality
  */
+
 class MainPage extends StatefulWidget {
   static const String route = '/view_cv';
   final List<FileModel>? files;
-  const MainPage({Key? key, this.files}) : super(key: key);
+
+  const MainPage({Key? key, required this.files}) : super(key: key);
 
   @override
   State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
+  var jsonText = 'No Text'.obs;
+
+  Widget buildFiles(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        if (widget.files != null)
+          for (var file in widget.files!) buildFileDetail(file, context),
+      ],
+    );
+  }
+
+  Widget buildFileDetail(FileModel? file, BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(left: 24),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          const SizedBox(
+            height: 20,
+          ),
+          InkWell(
+            child: Image.asset(
+              'images/pdf.png',
+              width: 50,
+              height: 50,
+            ),
+            onTap: () async {
+              var jsonFile = file!.text;
+              jsonText.value = jsonFile.toString();
+            },
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Text(
+            ' ${file?.name ?? 'No name'}',
+            style: const TextStyle(
+                color: MainColors.secondColor,
+                fontFamily: 'Merriweather',
+                fontSize: 18,
+                fontWeight: FontWeight.w100),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       // The same App Bar as it is in Home Page, but with line below it
       appBar: PreferredSize(
@@ -173,8 +221,8 @@ class _MainPageState extends State<MainPage> {
           backgroundColor: MainColors.mainColor,
           centerTitle: false,
           flexibleSpace: Container(
-            margin: const EdgeInsets.only(left: 30.0),
-            alignment: Alignment.topLeft,
+              margin: const EdgeInsets.only(left: 30.0),
+              alignment: Alignment.topLeft,
               child: TextButton(
                 child: const Text(
                   'iExtract',
@@ -187,8 +235,7 @@ class _MainPageState extends State<MainPage> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-              )
-          ),
+              )),
           // second Color border line at the bottom of App Bar
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(4.0),
@@ -221,20 +268,19 @@ class _MainPageState extends State<MainPage> {
                     flex: 5,
                     child: ListView(
                       padding: const EdgeInsets.all(8),
-                      children: const <Widget>[
-                        Text('"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."'
-                            '"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."'
-                            '"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."'
-                            '"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."'
-                            '"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."'
-                            '"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."',
-                          style: TextStyle(
-                              color: MainColors.secondColor,
-                              fontFamily: 'Eczar',
-                              fontSize: 18,
-                              fontWeight: FontWeight.w100),
-                          textAlign: TextAlign.center,
-                        ), // Json text
+                      children: <Widget>[
+                        Obx(() => Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 16),
+                              child: Text(
+                                jsonText.value,
+                                style: const TextStyle(
+                                    color: MainColors.secondColor,
+                                    fontFamily: 'Merriweather',
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w100),
+                              ),
+                            )), // Json text
                       ],
                     ),
                   ),
@@ -244,8 +290,8 @@ class _MainPageState extends State<MainPage> {
                       style: ElevatedButton.styleFrom(
                           primary: MainColors.secondPageButtonColor,
                           fixedSize: const Size(453, 108),
-                          side: const BorderSide(color: MainColors.secondColor)
-                      ),
+                          side:
+                              const BorderSide(color: MainColors.secondColor)),
                       // Button 'Parse CVs' will send you to Main Page
                       onPressed: () {
                         //export json
@@ -254,10 +300,10 @@ class _MainPageState extends State<MainPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
+                        children: const [
+                          SizedBox(
                             width: 207,
-                            child: const Text(
+                            child: Text(
                               'Export as JSON',
                               style: TextStyle(
                                   color: MainColors.secondColor,
@@ -267,10 +313,14 @@ class _MainPageState extends State<MainPage> {
                               textAlign: TextAlign.center,
                             ),
                           ),
-                          const SizedBox(
+                          SizedBox(
                             width: 20,
                           ),
-                          const Icon(Icons.download_sharp, size: 80, color: MainColors.secondColor,),
+                          Icon(
+                            Icons.download_sharp,
+                            size: 80,
+                            color: MainColors.secondColor,
+                          ),
                         ],
                       ),
                     ),
@@ -285,47 +335,63 @@ class _MainPageState extends State<MainPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Flexible(
                         flex: 12,
-                          child: TextField(
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'find a skill',
-                            ),
+                        child: TextField(
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: 'find a skill',
                           ),
+                        ),
                       ),
                       Flexible(
                         flex: 2,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                primary: MainColors.secondColor,
-                                fixedSize: const Size(10, 50)
-                            ),
-                            onPressed: () {  },
-                            child: const Icon(Icons.search),  //Const size, so when flex the window - icon stay constant
-                          ),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              primary: MainColors.secondColor,
+                              fixedSize: const Size(10, 50)),
+                          onPressed: () {},
+                          child: const Icon(Icons
+                              .search), //Const size, so when flex the window - icon stay constant
+                        ),
                       ),
                     ],
                   ),
                 ),
                 Container(
                   alignment: Alignment.center,
-                  height: 300,
-                  width: 300,
-                  child: DroppedFileWidget(files: widget.files),
+                  color: MainColors.mainColor,
+                  height: 400,
+                  width: 400,
+                  child: ListView(
+                    padding: const EdgeInsets.all(8),
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: buildFiles(
+                              context,
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
                 Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 36),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 36),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         primary: MainColors.secondPageButtonColor,
                         fixedSize: const Size(278, 62),
-                        side: const BorderSide(color: MainColors.secondColor)
-                    ),
+                        side: const BorderSide(color: MainColors.secondColor)),
                     // Button 'Parse CVs' will send you to Main Page
                     onPressed: () {
                       //export json
@@ -358,94 +424,3 @@ class _MainPageState extends State<MainPage> {
     );
   }
 }
-
-class DroppedFileWidget extends StatelessWidget {
-  final List<FileModel>? files;
-  const DroppedFileWidget({Key? key, required this.files}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Expanded(
-          child: buildFiles(context),
-        ),
-      ],
-    );
-  }
-
-  Widget buildFiles(BuildContext context) {
-    if (files == null) return buildEmptyFile('No Selected Files');
-
-    return Column(
-      children: <Widget>[
-        if (files != null)
-          for (var file in files!) buildFileDetail(file, context),
-      ],
-    );
-  }
-
-  Widget buildEmptyFile(String text) {
-    return Container(
-      width: 300,
-      height: 400,
-      color: MainColors.mainColor,
-      child: Center(child: Text(text)),
-    );
-  }
-
-  Widget buildFileDetail(FileModel? file, BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(left: 24),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          const Text(
-            'Selected File Preview ',
-            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
-          ),
-          Text(
-            'Name: ${file?.name ?? 'No name'}',
-            style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 22),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          InkWell(
-            child: Image.asset('images/pdf.png'),
-            onTap: () async {
-              var jsonFile = file!.text;
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: Text(jsonFile.toString()),
-                  actions: [
-                    TextButton(
-                      child: const Text('Download'),
-                      onPressed: () async {
-                        //Code for download the image
-                        final storageRef = FirebaseStorage.instance.ref();
-
-                        final jsonUrl = await storageRef
-                            .child(
-                            "uploads/${globals.sessionHashCode}/${file.name}.json")
-                            .getDownloadURL();
-
-                        html.window.open(jsonUrl, "_blank");
-                      },
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-        ],
-      ),
-    );
-  }
-}
-

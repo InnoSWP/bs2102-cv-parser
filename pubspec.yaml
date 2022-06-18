@@ -44,6 +44,7 @@ dependencies:
   syncfusion_flutter_pdf: ^20.1.58-beta
   http: ^0.13.4
   local_session_timeout: ^0.1.0
+  get: ^4.6.5
 
 dev_dependencies:
   flutter_test:
