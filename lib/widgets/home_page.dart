@@ -22,13 +22,14 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  List<FileModel>? files = [
-    FileModel(name: 'Mock.pdf', text: 'JSON text', ext: '.json'),
-    FileModel(name: 'Mock2.pdf', text: 'JSON text2', ext: '.json'),
-    FileModel(name: 'Mock3.pdf', text: 'JSON text3', ext: '.json'),
-    FileModel(name: 'Mock4.pdf', text: 'JSON text4', ext: '.json'),
-    FileModel(name: 'Mock5.pdf', text: 'JSON text5', ext: '.json'),
-  ]; // For time, when API is not working
+  List<FileModel>? files;
+  //  = [
+  //   FileModel(name: 'Mock.pdf', text: 'JSON text', ext: '.json'),
+  //   FileModel(name: 'Mock2.pdf', text: 'JSON text2', ext: '.json'),
+  //   FileModel(name: 'Mock3.pdf', text: 'JSON text3', ext: '.json'),
+  //   FileModel(name: 'Mock4.pdf', text: 'JSON text4', ext: '.json'),
+  //   FileModel(name: 'Mock5.pdf', text: 'JSON text5', ext: '.json'),
+  // ]; // For time, when API is not working
 
   @override
   Widget build(BuildContext context) {
@@ -74,28 +75,27 @@ class HomePageState extends State<HomePage> {
     return PreferredSize(
       preferredSize: const Size.fromHeight(101.0), // Size of appBar is 101
       child: AppBar(
-        automaticallyImplyLeading: false, // Removing the 'back button' from navigator.pop()
+        automaticallyImplyLeading:
+            false, // Removing the 'back button' from navigator.pop()
         elevation: 0, // Remove shadow below the appbar
         backgroundColor: MainColors.mainColor,
         centerTitle: false, // Remove center alignment for appbar 'title'
         flexibleSpace: Container(
-            margin: const EdgeInsets.only(left: 30.0),
-            alignment: Alignment.bottomLeft,
+          margin: const EdgeInsets.only(left: 30.0),
+          alignment: Alignment.bottomLeft,
 
-            //Logo
-            child: TextButton(
-              child: const Text(
-                'iExtract',
-                style: TextStyle(
-                    color: MainColors.secondColor,
-                    fontFamily: 'Eczar',
-                    fontSize: 60,
-                    fontWeight: FontWeight.bold),
-              ),
-              onPressed: () {
-
-              },
+          //Logo
+          child: TextButton(
+            child: const Text(
+              'iExtract',
+              style: TextStyle(
+                  color: MainColors.secondColor,
+                  fontFamily: 'Eczar',
+                  fontSize: 60,
+                  fontWeight: FontWeight.bold),
             ),
+            onPressed: () {},
+          ),
         ),
       ),
     );
@@ -107,11 +107,10 @@ class HomePageState extends State<HomePage> {
       style: ElevatedButton.styleFrom(
           primary: MainColors.secondColor, fixedSize: const Size(330.87, 83)),
       onPressed: () {
-        if(files?.length != null) {
+        if (files?.length != null) {
           Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => MainPage(files: files)));
-        }
-        else{
+        } else {
           showAlertDialog(context);
         }
       },
@@ -138,10 +137,8 @@ class HomePageState extends State<HomePage> {
 }
 
 showAlertDialog(BuildContext context) {
-
   Widget closeButton = ElevatedButton(
-    style: ElevatedButton.styleFrom(
-        primary: MainColors.secondColor),
+    style: ElevatedButton.styleFrom(primary: MainColors.secondColor),
     child: const Text(
       'Close',
       style: TextStyle(
@@ -157,16 +154,20 @@ showAlertDialog(BuildContext context) {
 
   // Create AlertDialog
   AlertDialog alert = AlertDialog(
-    title: const Text("Error",
+    title: const Text(
+      "Error",
       style: TextStyle(
           color: Colors.black,
           fontFamily: 'Merriweather',
-          fontWeight: FontWeight.w100),),
-    content: const Text("You have not uploaded any files",
+          fontWeight: FontWeight.w100),
+    ),
+    content: const Text(
+      "You have not uploaded any files",
       style: TextStyle(
           color: Colors.black,
           fontFamily: 'Merriweather',
-          fontWeight: FontWeight.w100),),
+          fontWeight: FontWeight.w100),
+    ),
     actions: [
       closeButton,
     ],

@@ -2,7 +2,7 @@ import 'package:cvparser/model/file_model.dart';
 
 import 'package:get/get.dart';
 
-// ignore: for json download button
+// ignore: unused_import
 import 'package:firebase_storage/firebase_storage.dart';
 
 import '../constants/colors.dart';
