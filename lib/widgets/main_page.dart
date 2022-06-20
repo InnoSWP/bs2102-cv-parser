@@ -27,7 +27,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  var jsonText = 'No Text'.obs; //Get_X pub dev for jsonText update
+  var jsonText = ''.obs; //Get_X pub dev for jsonText update
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +62,7 @@ class _MainPageState extends State<MainPage> {
             height: 400,
             width: 400,
             child: ListView(
+              primary: false,
               padding: const EdgeInsets.all(8),
               children: [
                 Row(

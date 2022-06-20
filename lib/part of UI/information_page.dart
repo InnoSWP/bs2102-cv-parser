@@ -87,6 +87,7 @@ class InformationWidget extends StatelessWidget {
     return Flexible(
       flex: 5,
       child: ListView(
+        primary: true,
         padding: const EdgeInsets.all(8),
         children: <Widget>[
           Obx(() => Container(
