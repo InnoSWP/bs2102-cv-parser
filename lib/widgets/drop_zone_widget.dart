@@ -1,6 +1,5 @@
 import 'package:cvparser/model/file_model.dart';
 import 'package:cvparser/utils/api_request.dart';
-import 'package:cvparser/utils/delete_folder_content.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -42,11 +41,8 @@ class _DropZoneWidgetState extends State<DropZoneWidget> {
           onCreated: (controller) => this.controller = controller,
           // process dropping multiple files in the dropzone
           onDropMultiple: (List<dynamic>? ev) async {
-            // do nothing if no files were returned
             if (ev?.isEmpty ?? false) return;
-            // upload files to the database
-            await deleteFirebaseFolderContent()
-                .then((value) async => await uploadFiles(ev!));
+            uploadFiles(ev!);
           },
           onHover: () => setState(() => highlight = true),
           onLeave: () => setState(() => highlight = false),
@@ -81,9 +77,6 @@ class _DropZoneWidgetState extends State<DropZoneWidget> {
                   onPressed: () async {
                     // Pick files using file explorer
                     await pickFilesOnPress().then((value) async {
-                      await deleteFirebaseFolderContent();
-                      return value;
-                    }).then((value) async {
                       if (value == null) return;
                       await uploadFiles(value);
                     });

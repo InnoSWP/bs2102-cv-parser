@@ -1,5 +1,4 @@
 import 'package:cvparser/model/file_model.dart';
-import 'package:cvparser/utils/delete_folder_content.dart';
 import 'package:cvparser/widgets/drop_file_widget.dart';
 import 'package:cvparser/widgets/drop_zone_widget.dart';
 import 'package:cvparser/widgets/search_and_store_files.dart';
@@ -21,12 +20,6 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-  // TODO figure out how to call function when user closes tab
-  html.window.onBeforeUnload.listen((event) async {
-    devtools.log('onBeforeUnload run');
-    await deleteFirebaseFolderContent();
-  });
 
   runApp(
     MaterialApp(
@@ -53,14 +46,6 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   List<FileModel>? files;
-
-  @override
-  Future<void> dispose() async {
-    devtools.log('disposed');
-    await deleteFirebaseFolderContent();
-    super.dispose();
-    // TODO delete files after leaving the website
-  }
 
   @override
   Widget build(BuildContext context) {
