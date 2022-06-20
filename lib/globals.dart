@@ -1,3 +1,0 @@
-library globals;
-
-int? sessionHashCode;

@@ -1,16 +1,13 @@
+import 'package:cvparser/model/custom_exceptions.dart';
 import 'package:cvparser/model/file_model.dart';
 import 'package:cvparser/utils/api_request.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cvparser/utils/extract_from_pdf.dart';
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:cvparser/constants/colors.dart';
 
 import 'dart:developer' as devtools show log;
-
-import 'package:syncfusion_flutter_pdf/pdf.dart';
-
-import 'package:cvparser/globals.dart' as globals;
 
 class DropZoneWidget extends StatefulWidget {
   const DropZoneWidget({
@@ -136,90 +133,53 @@ class _DropZoneWidgetState extends State<DropZoneWidget> {
   /// Function to upload multiple files to the Firebase
   /// [ev] argument is a list of files
   Future uploadFiles(List<dynamic> ev) async {
-    // take time when files were uploaded to the Firebase
-    // this time is used to create a folder with JSON files to be used
-    DateTime timeUploaded = DateTime.now();
-    globals.sessionHashCode = timeUploaded.hashCode;
-
     List<FileModel> droppedFiles = List<FileModel>.empty(growable: true);
 
-    for (var event in ev) {
-      try {
+    try {
+      for (var event in ev) {
         // check if file has correct PDF extension
         if (await controller.getFileMIME(event) != 'application/pdf') {
-          throw "Unexpected File Extension";
+          throw UnexpectedFileException(
+              'Wrong extension, make sure you\'ve all uploaded files in pdf format');
         }
-      } catch (e) {
-        // TODO process error
-        devtools.log('Error occurred, only pdf files are allowed');
-        setState(() => highlight = false);
-        return;
-      }
 
-      String name = event.name;
-      List<int> data = await controller.getFileData(event);
+        // get json file from pdf file
+        String jsonFile = await controller
+            // retrieve data from pdf file
+            .getFileData(event)
+            // extract text from data retrieved
+            .then((value) => extractFromPdf(value))
+            // get json file from pdf text
+            .then((value) async => await retrieveJSON(
+                  text: value,
+                  keywords: "string",
+                  pattern: 11,
+                ));
 
-      late final String text;
-      late final String jsonFile;
+        String name = event.name;
 
-      try {
-        //Load an existing PDF document.
-        PdfDocument document = PdfDocument(inputBytes: data);
-        //Create a new instance of the PdfTextExtractor.
-        PdfTextExtractor extractor = PdfTextExtractor(document);
-        //Extract all the text from the document.
-        text = extractor.extractText();
-      } catch (e) {
-        // TODO process errors
-        devtools.log('API error Unable to convert pdf to text');
-        text = '';
-        setState(() => highlight = false);
-        return;
-      }
-
-      try {
-        jsonFile = await retrieveJSON(
-          text: text,
-          keywords: "string",
-          pattern: 11,
+        // create fileModel from retrieved JSON
+        FileModel file = FileModel(
+          name: name,
+          text: jsonFile.toString(),
+          ext: '.json',
         );
-      } catch (e) {
-        devtools
-            .log('Error with error code $e happened while sending API request');
-        // TODO process errors
-        // API errors are returned as integer number of server response
-        setState(() => highlight = false);
-        return;
+
+        droppedFiles.add(file);
       }
 
-      // create fileModel from retrieved JSON
-      FileModel file = FileModel(
-        name: name,
-        text: jsonFile.toString(),
-        ext: 'json',
-        hashFolder: timeUploaded.hashCode.toInt(),
-      );
-
-      try {
-        // Upload file to the Firebase
-        await FirebaseStorage.instance
-            .ref('uploads/${file.hashFolder}/${file.name}.${file.ext}')
-            .putString(file.text);
-      } catch (e) {
-        devtools.log('Error $e while saving files to the Firebase');
-        // TODO process errors
-        // process firebase errors
-        setState(() => highlight = false);
-        return;
-      }
-
-      droppedFiles.add(file);
-
-      // widget.onDroppedFile(file);
+      widget.onProcessFiles(droppedFiles);
+    } on UnexpectedFileException catch (e) {
+      devtools.log(e.toString());
+    } on APIResponseException catch (e) {
+      // TODO process errors
+      devtools.log('API error Unable to convert pdf to text');
+      devtools.log('Error code - ${e.cause}');
+    } catch (e) {
+      devtools.log('Unexpected error \'$e\' occurred');
+    } finally {
+      // undo highlight to identify that files were uploaded
+      setState(() => highlight = false);
     }
-    // undo highlight to identify that files were uploaded
-    setState(() => highlight = false);
-    widget.onProcessFiles(droppedFiles);
-    devtools.log('Successfully Saved All files to the database!');
   }
 }

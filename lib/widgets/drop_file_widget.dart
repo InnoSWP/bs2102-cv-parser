@@ -1,15 +1,13 @@
-import 'dart:typed_data';
-
-import 'package:cvparser/model/file_model.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
-
-import 'package:cvparser/globals.dart' as globals;
-
-import 'dart:developer' as devtools show log;
-
+import 'dart:convert';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
+
+import 'package:cvparser/constants/colors.dart';
+import 'package:cvparser/model/file_model.dart';
+import 'package:flutter/material.dart';
+
+// ignore: unused_import
+import 'dart:developer' as devtools show log;
 
 class DroppedFileWidget extends StatelessWidget {
   final List<FileModel>? files;
@@ -40,9 +38,9 @@ class DroppedFileWidget extends StatelessWidget {
 
   Widget buildEmptyFile(String text) {
     return Container(
-      width: 120,
-      height: 120,
-      color: Colors.blue.shade300,
+      width: 300,
+      height: 400,
+      color: MainColors.mainColor,
       child: Center(child: Text(text)),
     );
   }
@@ -66,7 +64,7 @@ class DroppedFileWidget extends StatelessWidget {
           ),
           InkWell(
             child: Image.asset('images/pdf.png'),
-            onTap: () async {
+            onTap: () {
               var jsonFile = file!.text;
               showDialog(
                 context: context,
@@ -75,16 +73,24 @@ class DroppedFileWidget extends StatelessWidget {
                   actions: [
                     TextButton(
                       child: const Text('Download'),
-                      onPressed: () async {
-                        //Code for download the image
-                        final storageRef = FirebaseStorage.instance.ref();
+                      onPressed: () {
+                        // prepare
+                        final bytes = utf8.encode(file.text);
+                        final blob = html.Blob([bytes]);
+                        final url = html.Url.createObjectUrlFromBlob(blob);
+                        final anchor = html.document.createElement('a')
+                            as html.AnchorElement
+                          ..href = url
+                          ..style.display = 'none'
+                          ..download = '${file.name}${file.ext}';
+                        html.document.body?.children.add(anchor);
 
-                        final jsonUrl = await storageRef
-                            .child(
-                                "uploads/${globals.sessionHashCode}/${file.name}.json")
-                            .getDownloadURL();
+                        // download
+                        anchor.click();
 
-                        html.window.open(jsonUrl, "_blank");
+                        // cleanup
+                        html.document.body?.children.remove(anchor);
+                        html.Url.revokeObjectUrl(url);
                       },
                     ),
                   ],
