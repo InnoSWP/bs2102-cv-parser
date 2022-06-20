@@ -25,7 +25,6 @@ class InformationWidget extends StatelessWidget {
             ),
           ),
         ),
-
         child: Column(
           children: [
             buildTextSpace(),
@@ -53,7 +52,6 @@ class InformationWidget extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
-
           children: const [
             SizedBox(
               width: 207,
@@ -67,11 +65,9 @@ class InformationWidget extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-
             SizedBox(
               width: 20,
             ),
-
             Icon(
               Icons.download_sharp,
               size: 80,

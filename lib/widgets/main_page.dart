@@ -1,8 +1,10 @@
+import 'dart:convert';
+
 import 'package:cvparser/model/file_model.dart';
 
 import 'package:get/get.dart';
 
-// ignore: unused_import
+// ignore: for json download button
 import 'package:firebase_storage/firebase_storage.dart';
 
 import '../constants/colors.dart';
@@ -10,6 +12,9 @@ import 'package:flutter/material.dart';
 
 import '../part of UI/information_page.dart';
 import '../part of UI/logo.dart';
+
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
 
 /*
   Main Page - page with all main functionality
@@ -28,6 +33,13 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   var jsonText = 'No Text'.obs; //Get_X pub dev for jsonText update
+  late FileModel activeFile;
+
+  @override
+  void initState() {
+    if (widget.files != null) activeFile = widget.files!.first;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,6 +111,22 @@ class _MainPageState extends State<MainPage> {
             side: const BorderSide(color: MainColors.secondColor)),
         onPressed: () {
           //export json
+          // TODO wrong place
+          final bytes = utf8.encode(activeFile.text);
+          final blob = html.Blob([bytes]);
+          final url = html.Url.createObjectUrlFromBlob(blob);
+          final anchor = html.document.createElement('a') as html.AnchorElement
+            ..href = url
+            ..style.display = 'none'
+            ..download = '${activeFile.name}${activeFile.ext}';
+          html.document.body?.children.add(anchor);
+
+          // download
+          anchor.click();
+
+          // cleanup
+          html.document.body?.children.remove(anchor);
+          html.Url.revokeObjectUrl(url);
         },
         child: const Text(
           'Export as JSON',
@@ -216,7 +244,8 @@ class _MainPageState extends State<MainPage> {
               height: 50,
             ),
             onTap: () async {
-              var jsonFile = file!.text;
+              activeFile = file!;
+              var jsonFile = file.text;
               jsonText.value = jsonFile.toString();
             },
           ),
