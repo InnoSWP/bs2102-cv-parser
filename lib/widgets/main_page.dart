@@ -78,72 +78,59 @@ class _MainPageState extends State<MainPage> {
             ),
           ),
           // Download button
-          buildDownloadButton()
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              buildDownloadButton(),
+              buildUploadMoreButton(),
+            ],
+          )
         ],
       ),
     );
   }
 
-  Row buildDownloadButton() {
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 36),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                primary: MainColors.secondPageButtonColor,
-                side: const BorderSide(color: MainColors.secondColor)),
-            onPressed: () {
-              //export json
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
-                Text(
-                  'Export as JSON',
-                  style: TextStyle(
-                      color: MainColors.secondColor,
-                      fontFamily: 'Eczar',
-                      fontSize: 24,
-                      fontWeight: FontWeight.w100),
-                ),
-                SizedBox(
-                  width: 20,
-                )
-              ],
-            ),
-          ),
+  Padding buildDownloadButton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 36),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            primary: MainColors.secondPageButtonColor,
+            side: const BorderSide(color: MainColors.secondColor)),
+        onPressed: () {
+          //export json
+        },
+        child: const Text(
+          'Export as JSON',
+          style: TextStyle(
+              color: MainColors.secondColor,
+              fontFamily: 'Eczar',
+              fontSize: 24,
+              fontWeight: FontWeight.w100),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 36),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                primary: MainColors.secondPageButtonColor,
-                side: const BorderSide(color: MainColors.secondColor)),
-            onPressed: () {
-              //export json
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
-                Text(
-                  'Upload more CVs',
-                  style: TextStyle(
-                      color: MainColors.secondColor,
-                      fontFamily: 'Eczar',
-                      fontSize: 24,
-                      fontWeight: FontWeight.w100),
-                ),
-                SizedBox(
-                  width: 20,
-                )
-              ],
-            ),
-          ),
+      ),
+    );
+  }
+
+  Padding buildUploadMoreButton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 36),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            primary: MainColors.secondPageButtonColor,
+            side: const BorderSide(color: MainColors.secondColor)),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: const Text(
+          'Upload more CVs',
+          style: TextStyle(
+              color: MainColors.secondColor,
+              fontFamily: 'Eczar',
+              fontSize: 24,
+              fontWeight: FontWeight.w100),
         ),
-      ],
+      ),
     );
   }
 
