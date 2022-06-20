@@ -1,5 +1,4 @@
 import 'package:cvparser/model/file_model.dart';
-import 'package:cvparser/part%20of%20UI/logo.dart';
 import 'package:cvparser/widgets/drop_zone_widget.dart';
 import 'package:cvparser/widgets/main_page.dart';
 
@@ -84,7 +83,20 @@ class HomePageState extends State<HomePage> {
             alignment: Alignment.bottomLeft,
 
             //Logo
-            child: const IExtractLogo()),
+            child: TextButton(
+              child: const Text(
+                'iExtract',
+                style: TextStyle(
+                    color: MainColors.secondColor,
+                    fontFamily: 'Eczar',
+                    fontSize: 60,
+                    fontWeight: FontWeight.bold),
+              ),
+              onPressed: () {
+
+              },
+            ),
+        ),
       ),
     );
   }
@@ -94,12 +106,15 @@ class HomePageState extends State<HomePage> {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
           primary: MainColors.secondColor, fixedSize: const Size(330.87, 83)),
-      // Button 'Parse CVs' will send you to Main Page
       onPressed: () {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => MainPage(files: files)));
+        if(files?.length != null) {
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => MainPage(files: files)));
+        }
+        else{
+          showAlertDialog(context);
+        }
       },
-      // 'Parse CVs' button with icon itself
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -120,4 +135,48 @@ class HomePageState extends State<HomePage> {
       ),
     );
   }
+}
+
+showAlertDialog(BuildContext context) {
+
+  Widget closeButton = ElevatedButton(
+    style: ElevatedButton.styleFrom(
+        primary: MainColors.secondColor),
+    child: const Text(
+      'Close',
+      style: TextStyle(
+          color: Colors.white,
+          fontFamily: 'Merriweather',
+          fontSize: 16,
+          fontWeight: FontWeight.w100),
+    ),
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+  );
+
+  // Create AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: const Text("Error",
+      style: TextStyle(
+          color: Colors.black,
+          fontFamily: 'Merriweather',
+          fontWeight: FontWeight.w100),),
+    content: const Text("You have not uploaded any files",
+      style: TextStyle(
+          color: Colors.black,
+          fontFamily: 'Merriweather',
+          fontWeight: FontWeight.w100),),
+    actions: [
+      closeButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }

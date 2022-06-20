@@ -77,7 +77,6 @@ class _MainPageState extends State<MainPage> {
               ],
             ),
           ),
-
           // Download button
           buildDownloadButton()
         ],
@@ -85,19 +84,18 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  Padding buildDownloadButton() {
-    return Padding(
+  Row buildDownloadButton() {
+    return Row(
+      children: [
+        Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 36),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
                 primary: MainColors.secondPageButtonColor,
-                fixedSize: const Size(278, 62),
                 side: const BorderSide(color: MainColors.secondColor)),
-            // Button 'Parse CVs' will send you to Main Page
             onPressed: () {
               //export json
             },
-            // 'Parse CVs' button with icon itself
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -116,7 +114,37 @@ class _MainPageState extends State<MainPage> {
               ],
             ),
           ),
-        );
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 36),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                primary: MainColors.secondPageButtonColor,
+                side: const BorderSide(color: MainColors.secondColor)),
+            onPressed: () {
+              //export json
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const [
+                Text(
+                  'Upload more CVs',
+                  style: TextStyle(
+                      color: MainColors.secondColor,
+                      fontFamily: 'Eczar',
+                      fontSize: 24,
+                      fontWeight: FontWeight.w100),
+                ),
+                SizedBox(
+                  width: 20,
+                )
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   Padding buildSearchField() {
