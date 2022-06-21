@@ -96,7 +96,7 @@ class _MainPageState extends State<MainPage> {
           showAlertDialog(context);
         }
         else{
-          download(jsonText.value, downloadName: jsonName.value);
+          download(jsonText.value, downloadName: "${jsonName.value}.json");
         }
       },
       child: const Text(

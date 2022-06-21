@@ -59,7 +59,7 @@ class InformationWidget extends StatelessWidget {
               showAlertDialog(context);
             }
             else{
-              download(jsonText.value, downloadName: jsonName.value);
+              download(jsonText.value, downloadName: "${jsonName.value}.json");
             }
           },
 
