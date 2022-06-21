@@ -229,7 +229,7 @@ class _MainPageState extends State<MainPage> {
             ),
             onTap: () async {
               activeFile = file!;
-              var jsonFileText = file!.text;
+              var jsonFileText = file.text;
               var jsonFileName = file.name;
               jsonText.value = jsonFileText.toString();
               jsonName.value = jsonFileName.toString();
