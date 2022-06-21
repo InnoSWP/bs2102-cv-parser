@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cvparser/model/file_model.dart';
 import 'package:cvparser/widgets/file_download.dart';
 
@@ -11,6 +13,9 @@ import 'package:flutter/material.dart';
 
 import '../part of UI/information_page.dart';
 import '../part of UI/logo.dart';
+
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
 
 /*
   Main Page - page with all main functionality
@@ -30,6 +35,14 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   var jsonText = ''.obs; //Get_X pub dev for jsonText update
   var jsonName = ''.obs;
+
+  late FileModel activeFile;
+
+  @override
+  void initState() {
+    if (widget.files != null) activeFile = widget.files!.first;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -215,6 +228,7 @@ class _MainPageState extends State<MainPage> {
               height: 70,
             ),
             onTap: () async {
+              activeFile = file!;
               var jsonFileText = file!.text;
               var jsonFileName = file.name;
               jsonText.value = jsonFileText.toString();

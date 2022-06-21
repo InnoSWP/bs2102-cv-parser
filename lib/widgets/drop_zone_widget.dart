@@ -38,9 +38,8 @@ class _DropZoneWidgetState extends State<DropZoneWidget> {
           onCreated: (controller) => this.controller = controller,
           // process dropping multiple files in the dropzone
           onDropMultiple: (List<dynamic>? ev) async {
-            if (ev?.isEmpty ?? true) return;
-            // upload files to the database
-            await uploadFiles(ev!);
+            if (ev?.isEmpty ?? false) return;
+            uploadFiles(ev!);
           },
           onHover: () => setState(() => highlight = true),
           onLeave: () => setState(() => highlight = false),

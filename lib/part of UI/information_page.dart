@@ -28,7 +28,6 @@ class InformationWidget extends StatelessWidget {
             ),
           ),
         ),
-
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
