@@ -1,5 +1,6 @@
 import 'package:cvparser/widgets/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 void main() async {
   // allow widgets interaction with the Flutter engine
@@ -17,6 +18,7 @@ void main() async {
         primarySwatch: Colors.blue,
       ),
       home: const HomePage(),
+      builder: EasyLoading.init(),
     ),
   );
 }

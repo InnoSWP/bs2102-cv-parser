@@ -46,6 +46,8 @@ dependencies:
   local_session_timeout: ^0.1.0
   test: ^1.21.1
   get: ^4.6.5
+  flutter_svg: ^1.1.0
+  flutter_easyloading: ^3.0.5
 
 dev_dependencies:
   flutter_test:
