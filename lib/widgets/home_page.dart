@@ -28,6 +28,12 @@ class HomePageState extends State<HomePage> {
     FileModel(name: 'Mock3.pdf', text: 'JSON text3', ext: '.json'),
     FileModel(name: 'Mock4.pdf', text: 'JSON text4', ext: '.json'),
     FileModel(name: 'Mock5.pdf', text: 'JSON text5', ext: '.json'),
+    FileModel(name: 'Mock6.pdf', text: 'JSON text5', ext: '.json'),
+    FileModel(name: 'Mock7.pdf', text: 'JSON text5', ext: '.json'),
+    FileModel(name: 'Mock8.pdf', text: 'JSON text5', ext: '.json'),
+    FileModel(name: 'Mock9.pdf', text: 'JSON text5', ext: '.json'),
+    FileModel(name: 'Mock10.pdf', text: 'JSON text5', ext: '.json'),
+    FileModel(name: 'Mock11.pdf', text: 'JSON text5', ext: '.json'),
   ]; // For time, when API is not working
 
   @override

@@ -1,4 +1,5 @@
 import 'package:cvparser/model/file_model.dart';
+import 'package:cvparser/widgets/file_download.dart';
 
 import 'package:get/get.dart';
 
@@ -28,6 +29,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   var jsonText = ''.obs; //Get_X pub dev for jsonText update
+  var jsonName = ''.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +39,7 @@ class _MainPageState extends State<MainPage> {
       body: Row(
         children: [
           // Left side of MainPage with text and button to download
-          InformationWidget(jsonText: jsonText),
+          InformationWidget(jsonText: jsonText, jsonName: jsonName,),
 
           // Right side of MainPage with search and PDF scroll and 2 buttons
           buildPDFScroll(context),
@@ -53,84 +55,76 @@ class _MainPageState extends State<MainPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Search field and search button
-          buildSearchField(),
-
+          Expanded(
+            flex: 2,
+            child: buildSearchField(),
+          ),
           //PDF scroll list
-          Container(
-            alignment: Alignment.center,
-            color: MainColors.mainColor,
-            height: 400,
-            width: 400,
-            child: ListView(
-              primary: false,
-              padding: const EdgeInsets.all(8),
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: buildFiles(
-                        context,
-                      ),
-                    ),
-                  ],
-                )
-              ],
+          Expanded(
+            flex: 10,
+            child: Container(
+              alignment: Alignment.centerLeft,
+              color: MainColors.mainColor,
+              child: buildFiles(context),
             ),
           ),
-          // Download button
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              buildDownloadButton(),
-              buildUploadMoreButton(),
-            ],
-          )
+          Expanded(
+            flex: 2,
+            child: FittedBox(
+              fit: BoxFit.contain,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  buildDownloadButton(),
+                  buildUploadMoreButton(),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Padding buildDownloadButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 36),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-            primary: MainColors.secondPageButtonColor,
-            side: const BorderSide(color: MainColors.secondColor)),
-        onPressed: () {
-          //export json
-        },
-        child: const Text(
-          'Export as JSON',
-          style: TextStyle(
-              color: MainColors.secondColor,
-              fontFamily: 'Eczar',
-              fontSize: 24,
-              fontWeight: FontWeight.w100),
-        ),
+  ElevatedButton buildDownloadButton() {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+          primary: MainColors.secondPageButtonColor,
+          side: const BorderSide(color: MainColors.secondColor)),
+      onPressed: () {
+        if(jsonText.value == '') {
+          showAlertDialog(context);
+        }
+        else{
+          download(jsonText.value, downloadName: jsonName.value);
+        }
+      },
+      child: const Text(
+        'Export as JSON',
+        style: TextStyle(
+            color: MainColors.secondColor,
+            fontFamily: 'Eczar',
+            fontSize: 24,
+            fontWeight: FontWeight.w100),
       ),
     );
   }
 
-  Padding buildUploadMoreButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 36),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-            primary: MainColors.secondPageButtonColor,
-            side: const BorderSide(color: MainColors.secondColor)),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        child: const Text(
-          'Upload more CVs',
-          style: TextStyle(
-              color: MainColors.secondColor,
-              fontFamily: 'Eczar',
-              fontSize: 24,
-              fontWeight: FontWeight.w100),
-        ),
+  ElevatedButton buildUploadMoreButton() {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+          primary: MainColors.secondPageButtonColor,
+          side: const BorderSide(color: MainColors.secondColor)),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+      child: const Text(
+        'Upload more CVs',
+        style: TextStyle(
+            color: MainColors.secondColor,
+            fontFamily: 'Eczar',
+            fontSize: 24,
+            fontWeight: FontWeight.w100),
       ),
     );
   }
@@ -152,14 +146,16 @@ class _MainPageState extends State<MainPage> {
           ),
           Flexible(
             flex: 2,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  primary: MainColors.secondColor,
-                  fixedSize: const Size(10, 50)),
-              onPressed: () {},
-              child: const Icon(Icons
-                  .search), //Const size, so when flex the window - icon stay constant
-            ),
+            child: FittedBox(
+              fit: BoxFit.none,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: MainColors.secondColor,
+                    fixedSize: const Size(10, 50)),
+                onPressed: () {},
+                child: const Icon(Icons.search),
+              ),
+            )
           ),
         ],
       ),
@@ -193,7 +189,9 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget buildFiles(BuildContext context) {
-    return Column(
+    return GridView.count(
+      primary: false,
+      crossAxisCount: 3,
       children: <Widget>[
         if (widget.files != null)
           for (var file in widget.files!) buildFileDetail(file, context),
@@ -202,23 +200,25 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget buildFileDetail(FileModel? file, BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(left: 24),
+    return FittedBox(
+      fit: BoxFit.none,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           const SizedBox(
-            height: 20,
+            height: 10,
           ),
           InkWell(
             child: Image.asset(
               'images/pdf.png',
-              width: 50,
-              height: 50,
+              width: 70,
+              height: 70,
             ),
             onTap: () async {
-              var jsonFile = file!.text;
-              jsonText.value = jsonFile.toString();
+              var jsonFileText = file!.text;
+              var jsonFileName = file.name;
+              jsonText.value = jsonFileText.toString();
+              jsonName.value = jsonFileName.toString();
             },
           ),
           const SizedBox(
@@ -229,11 +229,55 @@ class _MainPageState extends State<MainPage> {
             style: const TextStyle(
                 color: MainColors.secondColor,
                 fontFamily: 'Merriweather',
-                fontSize: 18,
+                fontSize: 22,
                 fontWeight: FontWeight.w100),
           ),
         ],
       ),
+    );
+  }
+
+  showAlertDialog(BuildContext context) {
+
+    Widget closeButton = ElevatedButton(
+      style: ElevatedButton.styleFrom(
+          primary: MainColors.secondColor),
+      child: const Text(
+        'Close',
+        style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'Merriweather',
+            fontSize: 16,
+            fontWeight: FontWeight.w100),
+      ),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    // Create AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: const Text("Error",
+        style: TextStyle(
+            color: Colors.black,
+            fontFamily: 'Merriweather',
+            fontWeight: FontWeight.w100),),
+      content: const Text("You do not choose the file to export",
+        style: TextStyle(
+            color: Colors.black,
+            fontFamily: 'Merriweather',
+            fontWeight: FontWeight.w100),),
+      actions: [
+        closeButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }
