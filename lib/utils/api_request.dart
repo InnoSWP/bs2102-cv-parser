@@ -1,7 +1,8 @@
 import 'dart:convert';
 
-import 'package:cvparser/model/custom_exceptions.dart';
 import 'package:http/http.dart' as http;
+
+import '../model/custom_exceptions.dart';
 
 /// Sends API request to the server.
 /// Sends [text, keywords, pattern] as request body parameters.
@@ -13,18 +14,18 @@ Future<String> retrieveJSON({
   required int pattern,
 }) async {
   // Function to send an API request to the server
-  http.Response response = await http.post(
+  final http.Response response = await http.post(
     // Uri.parse('https://aqueous-anchorage-93443.herokuapp.com/CvParser'),
     Uri.parse('https://mock-cv-parser-3.herokuapp.com/api/cv_parser/'),
-    headers: {
-      "accept": "application/json",
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
+    headers: <String, String>{
+      'accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
     },
-    body: jsonEncode({
-      "text": text,
-      "keywords": keywords,
-      "pattern": pattern,
+    body: jsonEncode(<String, dynamic>{
+      'text': text,
+      'keywords': keywords,
+      'pattern': pattern,
     }),
   );
 

@@ -1,46 +1,39 @@
-import 'dart:convert';
-
-import 'package:cvparser/model/file_model.dart';
-import 'package:cvparser/widgets/file_download.dart';
-
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-// ignore: for json download button
-import 'package:firebase_storage/firebase_storage.dart';
-
 import '../constants/colors.dart';
-import 'package:flutter/material.dart';
-
+import '../model/file_model.dart';
 import '../part of UI/information_page.dart';
 import '../part of UI/logo.dart';
-
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
+import 'file_download.dart';
 
 /*
   Main Page - page with all main functionality
  */
 
 class MainPage extends StatefulWidget {
+  //PDF files from main page
+
+  const MainPage({super.key, required this.files});
   static const String route = '/view_cv'; // todo
 
-  final List<FileModel>? files; //PDF files from main page
-
-  const MainPage({Key? key, required this.files}) : super(key: key);
+  final List<FileModel>? files;
 
   @override
   State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
-  var jsonText = ''.obs; //Get_X pub dev for jsonText update
-  var jsonName = ''.obs;
+  RxString jsonText = ''.obs; //Get_X pub dev for jsonText update
+  RxString jsonName = ''.obs;
 
   late FileModel activeFile;
 
   @override
   void initState() {
-    if (widget.files != null) activeFile = widget.files!.first;
+    if (widget.files != null) {
+      activeFile = widget.files!.first;
+    }
     super.initState();
   }
 
@@ -50,9 +43,12 @@ class _MainPageState extends State<MainPage> {
       backgroundColor: MainColors.secondPageBackGround,
       appBar: buildAppBar(context),
       body: Row(
-        children: [
+        children: <Widget>[
           // Left side of MainPage with text and button to download
-          InformationWidget(jsonText: jsonText, jsonName: jsonName,),
+          InformationWidget(
+            jsonText: jsonText,
+            jsonName: jsonName,
+          ),
 
           // Right side of MainPage with search and PDF scroll and 2 buttons
           buildPDFScroll(context),
@@ -66,7 +62,7 @@ class _MainPageState extends State<MainPage> {
       flex: 2,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
+        children: <Widget>[
           // Search field and search button
           Expanded(
             flex: 2,
@@ -84,10 +80,9 @@ class _MainPageState extends State<MainPage> {
           Expanded(
             flex: 2,
             child: FittedBox(
-              fit: BoxFit.contain,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
+                children: <Widget>[
                   buildDownloadButton(),
                   buildUploadMoreButton(),
                 ],
@@ -105,11 +100,10 @@ class _MainPageState extends State<MainPage> {
           primary: MainColors.secondPageButtonColor,
           side: const BorderSide(color: MainColors.secondColor)),
       onPressed: () {
-        if(jsonText.value == '') {
+        if (jsonText.value == '') {
           showAlertDialog(context);
-        }
-        else{
-          download(jsonText.value, downloadName: "${jsonName.value}.json");
+        } else {
+          download(jsonText.value, downloadName: '${jsonName.value}.json');
         }
       },
       child: const Text(
@@ -147,7 +141,7 @@ class _MainPageState extends State<MainPage> {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
+        children: <Widget>[
           const Flexible(
             flex: 12,
             child: TextField(
@@ -158,18 +152,17 @@ class _MainPageState extends State<MainPage> {
             ),
           ),
           Flexible(
-            flex: 2,
-            child: FittedBox(
-              fit: BoxFit.none,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    primary: MainColors.secondColor,
-                    fixedSize: const Size(10, 50)),
-                onPressed: () {},
-                child: const Icon(Icons.search),
-              ),
-            )
-          ),
+              flex: 2,
+              child: FittedBox(
+                fit: BoxFit.none,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      primary: MainColors.secondColor,
+                      fixedSize: const Size(10, 50)),
+                  onPressed: () {},
+                  child: const Icon(Icons.search),
+                ),
+              )),
         ],
       ),
     );
@@ -207,7 +200,7 @@ class _MainPageState extends State<MainPage> {
       crossAxisCount: 3,
       children: <Widget>[
         if (widget.files != null)
-          for (var file in widget.files!) buildFileDetail(file, context),
+          for (FileModel file in widget.files!) buildFileDetail(file, context),
       ],
     );
   }
@@ -216,8 +209,7 @@ class _MainPageState extends State<MainPage> {
     return FittedBox(
       fit: BoxFit.none,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
+        children: <Widget>[
           const SizedBox(
             height: 10,
           ),
@@ -229,10 +221,10 @@ class _MainPageState extends State<MainPage> {
             ),
             onTap: () async {
               activeFile = file!;
-              var jsonFileText = file.text;
-              var jsonFileName = file.name;
-              jsonText.value = jsonFileText.toString();
-              jsonName.value = jsonFileName.toString();
+              final String jsonFileText = file.text;
+              final String jsonFileName = file.name;
+              jsonText.value = jsonFileText;
+              jsonName.value = jsonFileName;
             },
           ),
           const SizedBox(
@@ -251,11 +243,9 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  showAlertDialog(BuildContext context) {
-
-    Widget closeButton = ElevatedButton(
-      style: ElevatedButton.styleFrom(
-          primary: MainColors.secondColor),
+  void showAlertDialog(BuildContext context) {
+    final Widget closeButton = ElevatedButton(
+      style: ElevatedButton.styleFrom(primary: MainColors.secondColor),
       child: const Text(
         'Close',
         style: TextStyle(
@@ -270,18 +260,22 @@ class _MainPageState extends State<MainPage> {
     );
 
     // Create AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: const Text("Error",
+    final AlertDialog alert = AlertDialog(
+      title: const Text(
+        'Error',
         style: TextStyle(
             color: Colors.black,
             fontFamily: 'Merriweather',
-            fontWeight: FontWeight.w100),),
-      content: const Text("You do not choose the file to export",
+            fontWeight: FontWeight.w100),
+      ),
+      content: const Text(
+        'You do not choose the file to export',
         style: TextStyle(
             color: Colors.black,
             fontFamily: 'Merriweather',
-            fontWeight: FontWeight.w100),),
-      actions: [
+            fontWeight: FontWeight.w100),
+      ),
+      actions: <Widget>[
         closeButton,
       ],
     );

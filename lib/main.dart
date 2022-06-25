@@ -1,6 +1,7 @@
-import 'package:cvparser/widgets/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+
+import 'widgets/home_page.dart';
 
 void main() async {
   // allow widgets interaction with the Flutter engine

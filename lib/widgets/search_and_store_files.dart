@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
   Create search and scrollable list of files
  */
 class SearchAndStoreFiles extends StatefulWidget {
-  const SearchAndStoreFiles({Key? key}) : super(key: key);
+  const SearchAndStoreFiles({super.key});
 
   @override
   State<SearchAndStoreFiles> createState() => _SearchAndStoreFilesState();

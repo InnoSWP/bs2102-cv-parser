@@ -1,20 +1,22 @@
-import 'package:cvparser/model/custom_exceptions.dart';
-import 'package:cvparser/model/file_model.dart';
-import 'package:cvparser/utils/api_request.dart';
-import 'package:cvparser/utils/extract_from_pdf.dart';
-import 'package:flutter/material.dart';
-import 'package:dotted_border/dotted_border.dart';
-import 'package:flutter_dropzone/flutter_dropzone.dart';
-import 'package:cvparser/constants/colors.dart';
-
 import 'dart:developer' as devtools show log;
+import 'dart:typed_data';
+
+import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_dropzone/flutter_dropzone.dart';
+
+import '../constants/colors.dart';
+import '../model/custom_exceptions.dart';
+import '../model/file_model.dart';
+import '../utils/api_request.dart';
+import '../utils/extract_from_pdf.dart';
 
 class DropZoneWidget extends StatefulWidget {
   const DropZoneWidget({
-    Key? key,
+    super.key,
     // required this.onDroppedFile,
     required this.onProcessFiles,
-  }) : super(key: key);
+  });
 
   // final ValueChanged<FileModel?> onDroppedFile;
   final ValueChanged<List<FileModel>?> onProcessFiles;
@@ -31,14 +33,17 @@ class _DropZoneWidgetState extends State<DropZoneWidget> {
   Widget build(BuildContext context) {
     return buildDecoration(
         child: Stack(
-      children: [
+      children: <Widget>[
         DropzoneView(
           operation: DragOperation.copy,
           // cursor: CursorType.grab,
-          onCreated: (controller) => this.controller = controller,
+          onCreated: (DropzoneViewController controller) =>
+              this.controller = controller,
           // process dropping multiple files in the dropzone
           onDropMultiple: (List<dynamic>? ev) async {
-            if (ev?.isEmpty ?? false) return;
+            if (ev?.isEmpty ?? false) {
+              return;
+            }
             uploadFiles(ev!);
           },
           onHover: () => setState(() => highlight = true),
@@ -47,7 +52,7 @@ class _DropZoneWidgetState extends State<DropZoneWidget> {
         Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+            children: <Widget>[
               const SizedBox(
                 width: 450,
                 height: 86,
@@ -73,15 +78,16 @@ class _DropZoneWidgetState extends State<DropZoneWidget> {
                       fixedSize: const Size(330.87, 83)),
                   onPressed: () async {
                     // Pick files using file explorer
-                    await pickFilesOnPress().then((value) async {
-                      if (value == null) return;
+                    await pickFilesOnPress().then((List<dynamic> value) async {
+                      if (value == null) {
+                        return;
+                      }
                       await uploadFiles(value);
                     });
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
+                    children: const <Widget>[
                       Text(
                         'UPLOAD PDFs',
                         style: TextStyle(
@@ -106,14 +112,14 @@ class _DropZoneWidgetState extends State<DropZoneWidget> {
   }
 
   Widget buildDecoration({required Widget child}) {
-    final colorBackground =
+    final Color colorBackground =
         highlight ? MainColors.secondPageBackGround : Colors.white;
     return Container(
       color: colorBackground,
       child: DottedBorder(
         color: MainColors.secondColor,
         strokeWidth: 2,
-        dashPattern: const [8, 4],
+        dashPattern: const <double>[8, 4],
         padding: EdgeInsets.zero,
         child: child,
       ),
@@ -122,46 +128,47 @@ class _DropZoneWidgetState extends State<DropZoneWidget> {
 
   /// Function to pick files using local file explorer
   /// Allows to pick multiple files only of PDF type
-  Future pickFilesOnPress() async {
+  Future<List<dynamic>> pickFilesOnPress() async {
     setState(() => highlight = true);
-    return await controller.pickFiles(
+    return controller.pickFiles(
       multiple: true,
-      mime: ['application/pdf'],
+      mime: <String>['application/pdf'],
     );
   }
 
   /// Function to upload multiple files to the Firebase
   /// [ev] argument is a list of files
-  Future uploadFiles(List<dynamic> ev) async {
-    List<FileModel> droppedFiles = List<FileModel>.empty(growable: true);
+  Future<dynamic> uploadFiles(List<dynamic> ev) async {
+    final List<FileModel> droppedFiles = List<FileModel>.empty(growable: true);
 
     try {
-      for (var event in ev) {
+      for (final dynamic event in ev) {
         // check if file has correct PDF extension
         if (await controller.getFileMIME(event) != 'application/pdf') {
           throw UnexpectedFileException(
-              'Wrong extension, make sure you\'ve all uploaded files in pdf format');
+              "Wrong extension, make sure you've all uploaded files in pdf format");
         }
 
         // get json file from pdf file
-        String jsonFile = await controller
+        final String jsonFile = await controller
             // retrieve data from pdf file
             .getFileData(event)
             // extract text from data retrieved
-            .then((value) => extractFromPdf(value))
+            .then((Uint8List value) => extractFromPdf(value))
             // get json file from pdf text
-            .then((value) async => await retrieveJSON(
+            .then((String value) async => retrieveJSON(
                   text: value,
-                  keywords: "string",
+                  keywords: 'string',
                   pattern: 11,
                 ));
 
-        String name = event.name;
+        // ignore: avoid_dynamic_calls
+        final String name = event.name.toString();
 
         // create fileModel from retrieved JSON
-        FileModel file = FileModel(
+        final FileModel file = FileModel(
           name: name,
-          text: jsonFile.toString(),
+          text: jsonFile,
           ext: '.json',
         );
 
@@ -172,11 +179,10 @@ class _DropZoneWidgetState extends State<DropZoneWidget> {
     } on UnexpectedFileException catch (e) {
       devtools.log(e.toString());
     } on APIResponseException catch (e) {
-      // TODO process errors
       devtools.log('API error Unable to convert pdf to text');
       devtools.log('Error code - ${e.cause}');
     } catch (e) {
-      devtools.log('Unexpected error \'$e\' occurred');
+      devtools.log("Unexpected error '$e' occurred");
     } finally {
       // undo highlight to identify that files were uploaded
       setState(() => highlight = false);

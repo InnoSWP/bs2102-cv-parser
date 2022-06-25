@@ -2,9 +2,9 @@ import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 String extractFromPdf(List<int> data) {
   //Load an existing PDF document.
-  PdfDocument document = PdfDocument(inputBytes: data);
+  final PdfDocument document = PdfDocument(inputBytes: data);
   //Create a new instance of the PdfTextExtractor.
-  PdfTextExtractor extractor = PdfTextExtractor(document);
+  final PdfTextExtractor extractor = PdfTextExtractor(document);
   //Extract all the text from the document.
-  return (extractor.extractText());
+  return extractor.extractText();
 }
