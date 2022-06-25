@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "579547426630",
+    "project_id": "cvparser-flutter-project",
+    "storage_bucket": "cvparser-flutter-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:579547426630:android:f70dab638a82d8f8c83f47",
+        "android_client_info": {
+          "package_name": "com.iextract.cvparser"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "579547426630-d76v42qd28qsrdlbbknp40nvksq50bmm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnw1AEi6-HX3dtbzfRniCj18v3m8UwPUk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "579547426630-d76v42qd28qsrdlbbknp40nvksq50bmm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
