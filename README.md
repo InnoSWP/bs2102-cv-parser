@@ -32,4 +32,4 @@ Flutter was chosen as the main framework for this project.
 ![Image](https://badgen.net/badge/license/MIT/blue)
 ![Image](https://badgen.net/badge/Flutter/2.18.0/blue)
 ## License
-https://github.com/InnoSWP/bs2102-cv-parser/blob/main/LICENSE
+[Link](https://github.com/InnoSWP/bs2102-cv-parser/blob/main/LICENSE)
