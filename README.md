@@ -31,6 +31,7 @@ Flutter was chosen as the main framework for this project.
 ## Badges
 ![Image](https://badgen.net/badge/license/MIT/blue)
 
+## License
 MIT License
 
 Copyright (c) [2022] [Anvar Iskhakov, Wesam Naseer, Abdulayev Damir, Ayaz Safin]
