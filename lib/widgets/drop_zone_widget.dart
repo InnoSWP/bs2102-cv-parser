@@ -9,6 +9,10 @@ import 'package:cvparser/constants/colors.dart';
 
 import 'dart:developer' as devtools show log;
 
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+
+import '../main.dart';
+
 class DropZoneWidget extends StatefulWidget {
   const DropZoneWidget({
     Key? key,
@@ -29,6 +33,7 @@ class _DropZoneWidgetState extends State<DropZoneWidget> {
 
   @override
   Widget build(BuildContext context) {
+    EasyLoading.instance.loadingStyle = EasyLoadingStyle.custom;
     return buildDecoration(
         child: Stack(
       children: [
@@ -39,9 +44,15 @@ class _DropZoneWidgetState extends State<DropZoneWidget> {
           // process dropping multiple files in the dropzone
           onDropMultiple: (List<dynamic>? ev) async {
             if (ev?.isEmpty ?? false) return;
+            EasyLoading.show(
+              status: 'Uploading PDFs...',
+              maskType: EasyLoadingMaskType.black,
+            );
             uploadFiles(ev!);
           },
-          onHover: () => setState(() => highlight = true),
+          onHover: () => setState(() {
+            highlight = true;
+          }),
           onLeave: () => setState(() => highlight = false),
         ),
         Center(
@@ -123,7 +134,13 @@ class _DropZoneWidgetState extends State<DropZoneWidget> {
   /// Function to pick files using local file explorer
   /// Allows to pick multiple files only of PDF type
   Future pickFilesOnPress() async {
-    setState(() => highlight = true);
+    setState(() {
+      EasyLoading.show(
+        status: 'Uploading PDFs...',
+        maskType: EasyLoadingMaskType.black,
+      );
+      highlight = true;
+    });
     return await controller.pickFiles(
       multiple: true,
       mime: ['application/pdf'],
@@ -134,6 +151,7 @@ class _DropZoneWidgetState extends State<DropZoneWidget> {
   /// [ev] argument is a list of files
   Future uploadFiles(List<dynamic> ev) async {
     List<FileModel> droppedFiles = List<FileModel>.empty(growable: true);
+    bool success = false;
 
     try {
       for (var event in ev) {
@@ -170,16 +188,38 @@ class _DropZoneWidgetState extends State<DropZoneWidget> {
 
       widget.onProcessFiles(droppedFiles);
     } on UnexpectedFileException catch (e) {
+      success = true;
+      EasyLoading.showError(
+          'Wrong extension, make sure you\'ve all uploaded files in pdf format');
       devtools.log(e.toString());
     } on APIResponseException catch (e) {
       // TODO process errors
+      if (!success) {
+        success = true;
+        EasyLoading.showError(
+            'API error Unable to convert pdf to text. Error code - ${e.cause}');
+      }
       devtools.log('API error Unable to convert pdf to text');
       devtools.log('Error code - ${e.cause}');
     } catch (e) {
+      if (!success) {
+        success = true;
+        EasyLoading.showError(
+          'Failed with Unexpected Error',
+          //maskType: EasyLoadingMaskType.black,          to ask
+        );
+      }
       devtools.log('Unexpected error \'$e\' occurred');
     } finally {
       // undo highlight to identify that files were uploaded
-      setState(() => highlight = false);
+      setState(() => {
+            if (!success)
+              {
+                EasyLoading.showSuccess('PDFs are uploaded'),
+                success = true,
+              },
+            highlight = false,
+          });
     }
   }
 }

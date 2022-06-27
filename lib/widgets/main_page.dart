@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cvparser/model/file_model.dart';
+import 'package:cvparser/utils/Search.dart';
 import 'package:cvparser/widgets/file_download.dart';
 
 import 'package:get/get.dart';
@@ -33,6 +34,8 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  List<FileModel>? currentFiles;
+
   var jsonText = ''.obs; //Get_X pub dev for jsonText update
   var jsonName = ''.obs;
 
@@ -40,6 +43,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
+    currentFiles = widget.files;
     if (widget.files != null) activeFile = widget.files!.first;
     super.initState();
   }
@@ -148,13 +152,20 @@ class _MainPageState extends State<MainPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Flexible(
+          Flexible(
             flex: 12,
             child: TextField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: 'find a skill',
               ),
+              onChanged: (String input){
+                setState((){
+                  // print(currentFiles?.length);
+                  // currentFiles = search(widget.files, input);
+                  // print(currentFiles?.length);
+                });
+              },
             ),
           ),
           Flexible(
@@ -206,8 +217,8 @@ class _MainPageState extends State<MainPage> {
       primary: false,
       crossAxisCount: 3,
       children: <Widget>[
-        if (widget.files != null)
-          for (var file in widget.files!) buildFileDetail(file, context),
+        if (currentFiles != null)
+          for (var file in currentFiles!) buildFileDetail(file, context),
       ],
     );
   }
