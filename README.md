@@ -11,8 +11,8 @@ Cv Pareser is a website to parse CVs and convert them to JSON file.
 This is program designed to help Innopolis Admission Office to choose suitable applications from great amount of students’ resumes.
 This website contains all functionality dedicated to proper applicants selection like _Search Function_ and _Dropzeone_ that allows to upload multiple pdf files.
 ## Demo
-![Image](https://ibb.co/z8MSF8S)
-![Image](https://ibb.co/B4VKvp3)
+![Image](https://i.ibb.co/HNSrCNr/image.png)
+![Image](https://i.ibb.co/hXR1r69/image.png)
 ## How to use
 1. Upload the files then click “PARSE CVs”  
 - Note: Check the first picture
