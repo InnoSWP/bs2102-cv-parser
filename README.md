@@ -2,10 +2,10 @@
 BS21-02 Software Project. CV Parser.
 
 ## Team Members:
--Anvar Iskhakov an.iskhakov@innopolis.university
--Wesam Naseer: w.naseer@innopolis.university
--Abdulayev Damir: d.abdulayev@innopolis.university
--Ayaz Safin: ay.safin@innopolis.university
+- Anvar Iskhakov an.iskhakov@innopolis.university
+- Wesam Naseer: w.naseer@innopolis.university
+- Abdulayev Damir: d.abdulayev@innopolis.university
+- Ayaz Safin: ay.safin@innopolis.university
 ## Project Description
 Cv Pareser is a website to parse CVs and convert them to JSON file.
 This is program designed to help Innopolis Admission Office to choose suitable applications from great amount of students’ resumes.
