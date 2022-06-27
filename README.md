@@ -30,7 +30,7 @@ After that you can open folder __bs2102-cv-parser__ using any IDE that you like,
 Flutter was chosen as the main framework for this project.
 ## Badges
 ![Image](https://badgen.net/badge/license/MIT/blue)
-
+![Image](https://badgen.net/badge/Flutter/2.18.0/blue)
 ## License
 MIT License
 
