@@ -161,9 +161,7 @@ class _MainPageState extends State<MainPage> {
               ),
               onChanged: (String input){
                 setState((){
-                  // print(currentFiles?.length);
-                  // currentFiles = search(widget.files, input);
-                  // print(currentFiles?.length);
+                  currentFiles = search(widget.files, input);
                 });
               },
             ),

@@ -34,13 +34,18 @@ String searchInJson(String json, String txt){
   result+="]";
   return result;
 }
-List<FileModel> search(List<FileModel> json, String txt){
-  List<FileModel> result = <FileModel>[];
-  int len=json.length;
-  for(int i=0;i<len;i++){
-      //json[i].text = searchInJson(json[i].text,txt);
-      result.add(json[i]);
+
+List<FileModel> search(List<FileModel>? json, String txt){
+  List<FileModel> result= <FileModel>[];
+  int? len=json?.length;
+  for(int i=0;i<len!;i++){
+    if(json![i] != null) {
+      String x2 = searchInJson(json[i].text, txt);
+      if(x2 != "[]" && json[i].text.contains(x2.substring(2, x2.length - 2))) {
+        result.add(FileModel(name: json[i].name, text: json[i].text, ext: json[i].ext));
+      }
+    }
   }
-  
+
   return result;
 }

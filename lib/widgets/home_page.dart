@@ -23,9 +23,9 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   List<FileModel>? files = [
-    FileModel(name: 'Mock.pdf', text: 'JSON text', ext: '.json'),
-    FileModel(name: 'Mock2.pdf', text: 'JSON text2', ext: '.json'),
-    FileModel(name: 'Mock3.pdf', text: 'JSON text3', ext: '.json'),
+    FileModel(name: 'Mock.pdf', text: '[{"label":"Skills","match":"Java","sentence":"I had an experience in Java"},{"label":"Language","match":"Eng","sentence":"B2 english"}]', ext: '.json'),
+    FileModel(name: 'Mock2.pdf', text: '[{"label":"Skills","match":"C++","sentence":"I love C++"},{"label":"Skills","match":"Java","sentence":"I had an experience in Java"},{"label":"Language","match":"Eng","sentence":"B2 english"}]', ext: '.json'),
+    FileModel(name: 'Mock3.pdf', text: '[{"label":"Skills","match":"C++","sentence":"I love C++"},{"label":"Language","match":"Eng","sentence":"B2 english"}]', ext: '.json'),
     FileModel(name: 'Mock4.pdf', text: 'JSON text4', ext: '.json'),
     FileModel(name: 'Mock5.pdf', text: 'JSON text5', ext: '.json'),
     FileModel(name: 'Mock6.pdf', text: 'JSON text5', ext: '.json'),
