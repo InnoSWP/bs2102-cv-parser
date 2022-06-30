@@ -21,6 +21,7 @@ class MainPage extends StatefulWidget {
   //PDF files from main page
 
   const MainPage({super.key, required this.files});
+
   static const String route = '/view_cv'; // todo
 
   final List<FileModel>? files;
@@ -107,19 +108,19 @@ class _MainPageState extends State<MainPage> {
           primary: MainColors.secondPageButtonColor,
           side: const BorderSide(color: MainColors.secondColor)),
       onPressed: () {
-        if(currentFiles!.isEmpty) {
+        if (currentFiles!.isEmpty) {
           showAlertDialog(context);
-        }
-        else{
+        } else {
           int? size = currentFiles?.length;
-          for(int i = 0; i < size!; i++) {
-            var text;
-            var name;
-            if(currentFiles![i].text != null && currentFiles![i].name != null){
+          for (int i = 0; i < size!; i++) {
+            String text;
+            String name;
+            if (currentFiles![i].text != null &&
+                currentFiles![i].name != null) {
               text = currentFiles![i].text;
               name = currentFiles![i].name;
+              download(text, downloadName: "$name.json");
             }
-            download(text, downloadName: "$name.json");
           }
         }
       },
@@ -160,20 +161,17 @@ class _MainPageState extends State<MainPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Flexible(
-        children: <Widget>[
-          const Flexible(
             flex: 12,
             child: TextField(
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: 'find a skill',
               ),
-              onChanged: (String input){
-                setState((){
-                  if(input == ""){
+              onChanged: (String input) {
+                setState(() {
+                  if (input == "") {
                     currentFiles = widget.files;
-                  }
-                  else {
+                  } else {
                     currentFiles = search(widget.files, input);
                   }
                 });

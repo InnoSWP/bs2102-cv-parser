@@ -87,7 +87,7 @@ class _DropZoneWidgetState extends State<DropZoneWidget> {
                       fixedSize: const Size(330.87, 83)),
                   onPressed: () async {
                     // Pick files using file explorer
-                    await pickFilesOnPress().then((List<dynamic> value) async {
+                    await pickFilesOnPress().then((List<dynamic>! value) async {
                       if (value == null) {
                         return;
                       }
