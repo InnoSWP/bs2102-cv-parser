@@ -221,40 +221,41 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget buildFileDetail(FileModel? file, BuildContext context) {
-    return FittedBox(
-      fit: BoxFit.none,
-      child: Column(
-        children: <Widget>[
-          const SizedBox(
-            height: 10,
+    return Column(
+      children: <Widget>[
+        const SizedBox(
+          height: 10,
+        ),
+        Expanded(
+          child: InkWell(
+          child: Image.asset(
+            'images/pdf.png',
+            width: 70,
+            height: 70,
+            fit: BoxFit.scaleDown,
           ),
-          InkWell(
-            child: Image.asset(
-              'images/pdf.png',
-              width: 70,
-              height: 70,
-            ),
-            onTap: () async {
-              activeFile = file!;
-              final String jsonFileText = file.text;
-              final String jsonFileName = file.name;
-              jsonText.value = jsonFileText;
-              jsonName.value = jsonFileName;
-            },
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-            ' ${file?.name ?? 'No name'}',
-            style: const TextStyle(
-                color: MainColors.secondColor,
-                fontFamily: 'Merriweather',
-                fontSize: 22,
-                fontWeight: FontWeight.w100),
-          ),
-        ],
-      ),
+          onTap: () async {
+            activeFile = file!;
+            final String jsonFileText = file.text;
+            final String jsonFileName = file.name;
+            jsonText.value = jsonFileText;
+            jsonName.value = jsonFileName;
+          },
+        ),),
+        const SizedBox(
+          height: 10,
+        ),
+        Text(
+          maxLines: 1,
+          overflow: TextOverflow.clip,
+          ' ${file?.name ?? 'No name'}',
+          style: const TextStyle(
+              color: MainColors.secondColor,
+              fontFamily: 'Merriweather',
+              fontSize: 22,
+              fontWeight: FontWeight.w100),
+        ),
+      ],
     );
   }
 

@@ -150,7 +150,7 @@ class _DropZoneWidgetState extends State<DropZoneWidget> {
 
   /// Function to upload multiple files to the Firebase
   /// [ev] argument is a list of files
-  Future<dynamic> uploadFiles(List<dynamic> ev) async {
+  Future uploadFiles(List<dynamic> ev) async {
     List<FileModel> droppedFiles = List<FileModel>.empty(growable: true);
     bool success = false;
 
