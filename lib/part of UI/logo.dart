@@ -9,8 +9,8 @@ I made it text as the picture was of poor quality and had extra edges with the b
 
 class IExtractLogo extends StatelessWidget {
   const IExtractLogo({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

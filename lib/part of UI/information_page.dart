@@ -1,15 +1,15 @@
-import 'package:cvparser/widgets/file_download.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../constants/colors.dart';
-import 'package:flutter/material.dart';
+import '../widgets/file_download.dart';
 
 class InformationWidget extends StatelessWidget {
   const InformationWidget({
-    Key? key,
+    super.key,
     required this.jsonText,
     required this.jsonName,
-  }) : super(key: key);
+  });
 
   final RxString jsonText;
   final RxString jsonName;
@@ -30,7 +30,7 @@ class InformationWidget extends StatelessWidget {
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
+          children: <Widget>[
             buildTextSpace(),
             buildDownloadButton(context),
             const SizedBox(
@@ -44,57 +44,50 @@ class InformationWidget extends StatelessWidget {
 
   Flexible buildDownloadButton(BuildContext context) {
     return Flexible(
-      flex: 1,
-      child: FittedBox(
-        fit: BoxFit.fill,
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              primary: MainColors.secondPageButtonColor,
-              fixedSize: const Size(453, 108),
-              side: const BorderSide(color: MainColors.secondColor)),
-          // Button 'Parse CVs' will send you to Main Page
-          onPressed: () {
-            if(jsonText.value == '') {
-              showAlertDialog(context);
-            }
-            else{
-              download(jsonText.value, downloadName: "${jsonName.value}.json");
-            }
-          },
+        child: FittedBox(
+      fit: BoxFit.fill,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            primary: MainColors.secondPageButtonColor,
+            fixedSize: const Size(453, 108),
+            side: const BorderSide(color: MainColors.secondColor)),
+        // Button 'Parse CVs' will send you to Main Page
+        onPressed: () {
+          if (jsonText.value == '') {
+            showAlertDialog(context);
+          } else {
+            download(jsonText.value, downloadName: '${jsonName.value}.json');
+          }
+        },
 
-          // 'Parse CVs' button with icon itself
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-
-            children: const [
-              SizedBox(
-                width: 207,
-                child: Text(
-                  'Export as JSON',
-                  style: TextStyle(
-                      color: MainColors.secondColor,
-                      fontFamily: 'Eczar',
-                      fontSize: 32,
-                      fontWeight: FontWeight.w100),
-                  textAlign: TextAlign.center,
-                ),
+        // 'Parse CVs' button with icon itself
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const <Widget>[
+            SizedBox(
+              width: 207,
+              child: Text(
+                'Export as JSON',
+                style: TextStyle(
+                    color: MainColors.secondColor,
+                    fontFamily: 'Eczar',
+                    fontSize: 32,
+                    fontWeight: FontWeight.w100),
+                textAlign: TextAlign.center,
               ),
-
-              SizedBox(
-                width: 20,
-              ),
-
-              Icon(
-                Icons.download_sharp,
-                size: 80,
-                color: MainColors.secondColor,
-              ),
-            ],
-          ),
+            ),
+            SizedBox(
+              width: 20,
+            ),
+            Icon(
+              Icons.download_sharp,
+              size: 80,
+              color: MainColors.secondColor,
+            ),
+          ],
         ),
-      )
-    );
+      ),
+    ));
   }
 
   Flexible buildTextSpace() {
@@ -121,11 +114,9 @@ class InformationWidget extends StatelessWidget {
     );
   }
 
-  showAlertDialog(BuildContext context) {
-
-    Widget closeButton = ElevatedButton(
-      style: ElevatedButton.styleFrom(
-          primary: MainColors.secondColor),
+  void showAlertDialog(BuildContext context) {
+    final Widget closeButton = ElevatedButton(
+      style: ElevatedButton.styleFrom(primary: MainColors.secondColor),
       child: const Text(
         'Close',
         style: TextStyle(
@@ -140,18 +131,22 @@ class InformationWidget extends StatelessWidget {
     );
 
     // Create AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: const Text("Error",
+    final AlertDialog alert = AlertDialog(
+      title: const Text(
+        'Error',
         style: TextStyle(
             color: Colors.black,
             fontFamily: 'Merriweather',
-            fontWeight: FontWeight.w100),),
-      content: const Text("You do not choose the file to export",
+            fontWeight: FontWeight.w100),
+      ),
+      content: const Text(
+        'You do not choose the file to export',
         style: TextStyle(
             color: Colors.black,
             fontFamily: 'Merriweather',
-            fontWeight: FontWeight.w100),),
-      actions: [
+            fontWeight: FontWeight.w100),
+      ),
+      actions: <Widget>[
         closeButton,
       ],
     );

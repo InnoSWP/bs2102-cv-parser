@@ -1,23 +1,23 @@
 import 'dart:convert';
+// ignore: unused_import
+import 'dart:developer' as devtools show log;
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
-import 'package:cvparser/constants/colors.dart';
-import 'package:cvparser/model/file_model.dart';
 import 'package:flutter/material.dart';
 
-// ignore: unused_import
-import 'dart:developer' as devtools show log;
+import '../constants/colors.dart';
+import '../model/file_model.dart';
 
 class DroppedFileWidget extends StatelessWidget {
+  const DroppedFileWidget({super.key, required this.files});
   final List<FileModel>? files;
-  const DroppedFileWidget({Key? key, required this.files}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
+      children: <Widget>[
         Expanded(
           child: buildFiles(context),
         ),
@@ -26,12 +26,14 @@ class DroppedFileWidget extends StatelessWidget {
   }
 
   Widget buildFiles(BuildContext context) {
-    if (files == null) return buildEmptyFile('No Selected Files');
+    if (files == null) {
+      return buildEmptyFile('No Selected Files');
+    }
 
     return Column(
       children: <Widget>[
         if (files != null)
-          for (var file in files!) buildFileDetail(file, context),
+          for (FileModel file in files!) buildFileDetail(file, context),
       ],
     );
   }
@@ -49,8 +51,7 @@ class DroppedFileWidget extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(left: 24),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
+        children: <Widget>[
           const Text(
             'Selected File Preview ',
             style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
@@ -65,21 +66,23 @@ class DroppedFileWidget extends StatelessWidget {
           InkWell(
             child: Image.asset('images/pdf.png'),
             onTap: () {
-              var jsonFile = file!.text;
+              final String jsonFile = file!.text;
               showDialog(
                 context: context,
-                builder: (context) => AlertDialog(
-                  title: Text(jsonFile.toString()),
-                  actions: [
+                builder: (BuildContext context) => AlertDialog(
+                  title: Text(jsonFile),
+                  actions: <Widget>[
                     TextButton(
                       child: const Text('Download'),
                       onPressed: () {
                         // prepare
-                        final bytes = utf8.encode(file.text);
-                        final blob = html.Blob([bytes]);
-                        final url = html.Url.createObjectUrlFromBlob(blob);
-                        final anchor = html.document.createElement('a')
-                            as html.AnchorElement
+                        final List<int> bytes = utf8.encode(file.text);
+                        final html.Blob blob = html.Blob(<List<int>>[bytes]);
+                        final String url =
+                            html.Url.createObjectUrlFromBlob(blob);
+                        final html.AnchorElement anchor = html.document
+                            .createElement('a') as html.AnchorElement
+                          // ignore: unsafe_html
                           ..href = url
                           ..style.display = 'none'
                           ..download = '${file.name}${file.ext}';

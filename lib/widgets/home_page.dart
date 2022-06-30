@@ -1,21 +1,20 @@
-import 'package:cvparser/model/file_model.dart';
-import 'package:cvparser/widgets/drop_zone_widget.dart';
-import 'package:cvparser/widgets/main_page.dart';
-
-import '../constants/colors.dart';
-import 'package:flutter/material.dart';
-
 // ignore: unused_import
 import 'dart:developer' as devtools show log;
+
+import 'package:flutter/material.dart';
+
+import '../constants/colors.dart';
+import '../model/file_model.dart';
+import 'drop_zone_widget.dart';
+import 'main_page.dart';
 
 /*
   HomePage - First Page that user will see when he open the app
   It contains the drop zone for pdf, 'Parse CVs' button and App Bar with logo
  */
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
   static const String route = '';
-
-  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => HomePageState();
@@ -49,14 +48,14 @@ class HomePageState extends State<HomePage> {
 
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
+                children: <Widget>[
                   //Drop Zone
                   SizedBox(
                     height: 506,
                     width: 1100,
                     child: DropZoneWidget(
                       // ignore: unnecessary_this
-                      onProcessFiles: (files) =>
+                      onProcessFiles: (List<FileModel>? files) =>
                           setState(() => this.files = files),
                     ),
                   ),
@@ -82,9 +81,9 @@ class HomePageState extends State<HomePage> {
       child: AppBar(
         automaticallyImplyLeading:
             false, // Removing the 'back button' from navigator.pop()
-        elevation: 0, // Remove shadow below the appbar
+        elevation: 0, // Remove shadow below the appBar
         backgroundColor: MainColors.mainColor,
-        centerTitle: false, // Remove center alignment for appbar 'title'
+        centerTitle: false, // Remove center alignment for appBar 'title'
         flexibleSpace: Container(
           margin: const EdgeInsets.only(left: 30.0),
           alignment: Alignment.bottomLeft,
@@ -113,16 +112,15 @@ class HomePageState extends State<HomePage> {
           primary: MainColors.secondColor, fixedSize: const Size(330.87, 83)),
       onPressed: () {
         if (files?.length != null) {
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => MainPage(files: files)));
+          Navigator.of(context).push(MaterialPageRoute<dynamic>(
+              builder: (BuildContext context) => MainPage(files: files)));
         } else {
           showAlertDialog(context);
         }
       },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: const [
+        children: const <Widget>[
           Text(
             'PARSE CVs',
             style: TextStyle(
@@ -141,8 +139,8 @@ class HomePageState extends State<HomePage> {
   }
 }
 
-showAlertDialog(BuildContext context) {
-  Widget closeButton = ElevatedButton(
+void showAlertDialog(BuildContext context) {
+  final Widget closeButton = ElevatedButton(
     style: ElevatedButton.styleFrom(primary: MainColors.secondColor),
     child: const Text(
       'Close',
@@ -158,22 +156,22 @@ showAlertDialog(BuildContext context) {
   );
 
   // Create AlertDialog
-  AlertDialog alert = AlertDialog(
+  final AlertDialog alert = AlertDialog(
     title: const Text(
-      "Error",
+      'Error',
       style: TextStyle(
           color: Colors.black,
           fontFamily: 'Merriweather',
           fontWeight: FontWeight.w100),
     ),
     content: const Text(
-      "You have not uploaded any files",
+      'You have not uploaded any files',
       style: TextStyle(
           color: Colors.black,
           fontFamily: 'Merriweather',
           fontWeight: FontWeight.w100),
     ),
-    actions: [
+    actions: <Widget>[
       closeButton,
     ],
   );
