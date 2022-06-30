@@ -109,15 +109,24 @@ class _MainPageState extends State<MainPage> {
           primary: MainColors.secondPageButtonColor,
           side: const BorderSide(color: MainColors.secondColor)),
       onPressed: () {
-        if(jsonText.value == '') {
+        if(currentFiles!.isEmpty) {
           showAlertDialog(context);
         }
         else{
-          download(jsonText.value, downloadName: "${jsonName.value}.json");
+          int? size = currentFiles?.length;
+          for(int i = 0; i < size!; i++) {
+            var text;
+            var name;
+            if(currentFiles![i].text != null && currentFiles![i].name != null){
+              text = currentFiles![i].text;
+              name = currentFiles![i].name;
+            }
+            download(text, downloadName: "$name.json");
+          }
         }
       },
       child: const Text(
-        'Export as JSON',
+        'Export all JSONs',
         style: TextStyle(
             color: MainColors.secondColor,
             fontFamily: 'Eczar',
@@ -161,23 +170,15 @@ class _MainPageState extends State<MainPage> {
               ),
               onChanged: (String input){
                 setState((){
-                  currentFiles = search(widget.files, input);
+                  if(input == ""){
+                    currentFiles = widget.files;
+                  }
+                  else {
+                    currentFiles = search(widget.files, input);
+                  }
                 });
               },
             ),
-          ),
-          Flexible(
-            flex: 2,
-            child: FittedBox(
-              fit: BoxFit.none,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    primary: MainColors.secondColor,
-                    fixedSize: const Size(10, 50)),
-                onPressed: () {},
-                child: const Icon(Icons.search),
-              ),
-            )
           ),
         ],
       ),
