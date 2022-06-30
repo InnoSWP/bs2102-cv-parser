@@ -1,3 +1,9 @@
+import 'dart:convert';
+
+import 'package:cvparser/model/file_model.dart';
+import 'package:cvparser/utils/Search.dart';
+import 'package:cvparser/widgets/file_download.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,6 +21,7 @@ class MainPage extends StatefulWidget {
   //PDF files from main page
 
   const MainPage({super.key, required this.files});
+
   static const String route = '/view_cv'; // todo
 
   final List<FileModel>? files;
@@ -24,16 +31,17 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  RxString jsonText = ''.obs; //Get_X pub dev for jsonText update
-  RxString jsonName = ''.obs;
+  List<FileModel>? currentFiles;
+
+  var jsonText = ''.obs; //Get_X pub dev for jsonText update
+  var jsonName = ''.obs;
 
   late FileModel activeFile;
 
   @override
   void initState() {
-    if (widget.files != null) {
-      activeFile = widget.files!.first;
-    }
+    currentFiles = widget.files;
+    if (widget.files != null) activeFile = widget.files!.first;
     super.initState();
   }
 
@@ -100,14 +108,24 @@ class _MainPageState extends State<MainPage> {
           primary: MainColors.secondPageButtonColor,
           side: const BorderSide(color: MainColors.secondColor)),
       onPressed: () {
-        if (jsonText.value == '') {
+        if (currentFiles!.isEmpty) {
           showAlertDialog(context);
         } else {
-          download(jsonText.value, downloadName: '${jsonName.value}.json');
+          int? size = currentFiles?.length;
+          for (int i = 0; i < size!; i++) {
+            String text;
+            String name;
+            if (currentFiles![i].text != null &&
+                currentFiles![i].name != null) {
+              text = currentFiles![i].text;
+              name = currentFiles![i].name;
+              download(text, downloadName: "$name.json");
+            }
+          }
         }
       },
       child: const Text(
-        'Export as JSON',
+        'Export all JSONs',
         style: TextStyle(
             color: MainColors.secondColor,
             fontFamily: 'Eczar',
@@ -141,28 +159,25 @@ class _MainPageState extends State<MainPage> {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          const Flexible(
+        children: [
+          Flexible(
             flex: 12,
             child: TextField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: 'find a skill',
               ),
+              onChanged: (String input) {
+                setState(() {
+                  if (input == "") {
+                    currentFiles = widget.files;
+                  } else {
+                    currentFiles = search(widget.files, input);
+                  }
+                });
+              },
             ),
           ),
-          Flexible(
-              flex: 2,
-              child: FittedBox(
-                fit: BoxFit.none,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      primary: MainColors.secondColor,
-                      fixedSize: const Size(10, 50)),
-                  onPressed: () {},
-                  child: const Icon(Icons.search),
-                ),
-              )),
         ],
       ),
     );
@@ -199,8 +214,8 @@ class _MainPageState extends State<MainPage> {
       primary: false,
       crossAxisCount: 3,
       children: <Widget>[
-        if (widget.files != null)
-          for (FileModel file in widget.files!) buildFileDetail(file, context),
+        if (currentFiles != null)
+          for (var file in currentFiles!) buildFileDetail(file, context),
       ],
     );
   }
