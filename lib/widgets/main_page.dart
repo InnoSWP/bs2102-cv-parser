@@ -87,7 +87,6 @@ class _MainPageState extends State<MainPage> {
           ),
           Expanded(
             flex: 2,
-            child: FittedBox(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
@@ -95,7 +94,6 @@ class _MainPageState extends State<MainPage> {
                   buildUploadMoreButton(),
                 ],
               ),
-            ),
           ),
         ],
       ),
@@ -164,6 +162,9 @@ class _MainPageState extends State<MainPage> {
             flex: 12,
             child: TextField(
               decoration: const InputDecoration(
+                filled: true,
+                fillColor: MainColors.mainColor,
+                focusColor: MainColors.secondColor,
                 border: OutlineInputBorder(),
                 hintText: 'find a skill',
               ),

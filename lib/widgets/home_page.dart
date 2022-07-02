@@ -45,26 +45,23 @@ class HomePageState extends State<HomePage> {
           child: Container(
               padding: const EdgeInsets.only(left: 30.0, right: 30.0),
               // Column for Drop zone and Button 'Parse CVs'
-
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   //Drop Zone
                   SizedBox(
-                    height: 506,
-                    width: 1100,
+                    height: 450,
+                    width: 977,
                     child: DropZoneWidget(
                       // ignore: unnecessary_this
                       onProcessFiles: (List<FileModel>? files) =>
                           setState(() => this.files = files),
                     ),
                   ),
-
                   //Space between
                   const SizedBox(
-                    height: 40,
+                    height: 20,
                   ),
-
                   //Button Parse CVs
                   buildParseCVsButton(context),
                 ],
