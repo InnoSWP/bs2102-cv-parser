@@ -20,14 +20,14 @@ This website contains all functionality dedicated to proper applicants selection
 - Use the search bar to find the skills you want.
 - Click “Export as JSON” on the right part to download all files as JSON.
 ## Features
-⁃ Multiple Upload PDF 
-⁃ Search 
-⁃ Show UI skills categorised 
-⁃ Show UI Name 
-⁃ Report False Positive to firebase
-⁃ Export All/ one 
-⁃ Delete file
-⁃ Upload More
+- Multiple Upload PDF 
+- Search 
+- Show UI skills categorised 
+- Show UI Name 
+- Report False Positive to firebase
+- Export All/ one 
+- Delete file
+- Upload More
 ## Project Installation
 In order to run our website on your local machine you should copy this repository to your local folder by writing following text in your command propmt:
 ```
