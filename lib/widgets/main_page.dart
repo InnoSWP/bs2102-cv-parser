@@ -24,7 +24,7 @@ class MainPage extends StatefulWidget {
 
   static const String route = '/view_cv'; // todo
 
-  final List<FileModel>? files;
+  final RxList<FileModel>? files;
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -211,14 +211,14 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget buildFiles(BuildContext context) {
-    return GridView.count(
+    return Obx(() => GridView.count(
       primary: false,
       crossAxisCount: 3,
       children: <Widget>[
         if (currentFiles != null)
           for (var file in currentFiles!) buildFileDetail(file, context),
       ],
-    );
+    ),);
   }
 
   Widget buildFileDetail(FileModel? file, BuildContext context) {
@@ -226,6 +226,27 @@ class _MainPageState extends State<MainPage> {
       children: <Widget>[
         const SizedBox(
           height: 10,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            IconButton(
+              hoverColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                focusColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                onPressed: (){
+                  for(int i = 0; i < widget.files!.length; i++){
+                    if(widget.files![i] == file){
+                      print(widget.files!.length);
+                      widget.files!.remove(file);
+                      print(widget.files!.length);
+                    }
+                  }
+                },
+                icon: Icon(Icons.restore_from_trash_sharp),
+            )
+          ],
         ),
         Expanded(
           child: InkWell(

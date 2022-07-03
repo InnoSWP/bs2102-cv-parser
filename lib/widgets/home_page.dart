@@ -2,6 +2,7 @@
 import 'dart:developer' as devtools show log;
 
 import 'package:flutter/material.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
 import '../constants/colors.dart';
 import '../model/file_model.dart';
@@ -21,7 +22,7 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  List<FileModel>? files = [
+  RxList<FileModel>? files = <FileModel>[
     FileModel(name: 'Mocasdsaddsadasdsak.pdf', text: '[{"label":"Skills","match":"Java","sentence":"I had an experience in Java"},{"label":"Language","match":"Eng","sentence":"B2 english"}]', ext: '.json'),
     FileModel(name: 'Mock2.pdf', text: '[{"label":"Skills","match":"C++","sentence":"I love C++"},{"label":"Skills","match":"Java","sentence":"I had an experience in Java"},{"label":"Language","match":"Eng","sentence":"B2 english"}]', ext: '.json'),
     FileModel(name: 'Mock3.pdf', text: '[{"label":"Skills","match":"C++","sentence":"I love C++"},{"label":"Language","match":"Eng","sentence":"B2 english"}]', ext: '.json'),
@@ -33,7 +34,7 @@ class HomePageState extends State<HomePage> {
     FileModel(name: 'Mock9.pdf', text: 'JSON text5', ext: '.json'),
     FileModel(name: 'Mock10.pdf', text: 'JSON text5', ext: '.json'),
     FileModel(name: 'Mock11.pdf', text: 'JSON text5', ext: '.json'),
-  ]; // For time, when API is not working
+  ].obs; // For time, when API is not working
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +56,7 @@ class HomePageState extends State<HomePage> {
                     child: DropZoneWidget(
                       // ignore: unnecessary_this
                       onProcessFiles: (List<FileModel>? files) =>
-                          setState(() => this.files = files),
+                          setState(() => this.files = RxList.from(files!)),
                     ),
                   ),
                   //Space between
