@@ -51,12 +51,12 @@ class _MainPageState extends State<MainPage> {
       backgroundColor: MainColors.secondPageBackGround,
       appBar: buildAppBar(context),
       body: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           // Left side of MainPage with text and button to download
-          InformationWidget(
-            jsonText: jsonText,
-            jsonName: jsonName,
-          ),
+          
+          DropDownList(jsonText: jsonText, jsonName: jsonName),
 
           // Right side of MainPage with search and PDF scroll and 2 buttons
           buildPDFScroll(context),
