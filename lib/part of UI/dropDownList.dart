@@ -133,7 +133,7 @@ class _DropDownListState extends State<DropDownList>{
           return Container(
             child: ListTile(
               title: Text(item.name),
-              subtitle: Text(item.children.toString()),
+              //subtitle: Text(item.children.toString()),
               //subtitle: Text(item.name),
             ),
           );
@@ -173,16 +173,52 @@ class _DropDownListState extends State<DropDownList>{
   Widget build(BuildContext context) {
     //MainAxisAlignment: MainAxisAlignment.start;
     List<Group> items = _generateItems(jsonText.value);
-    List<Widget> columnChildren = [buildDownloadButton(context)];
+    List<Widget> columnChildren = [
+      Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                    child: Text(jsonName.value),
+                  ),
+                  ),
+                  buildDownloadButton(context)
+                  
+                ],
+              )
+    ];
 
     for (final group in items) {
       columnChildren.add(
         ExpansionTile(
-          title: Text(group.name),
-          collapsedTextColor: Colors.black,
-          textColor: Colors.black,
+          title: Text(group.name,
+          style: TextStyle(
+                    color: MainColors.secondColor,
+                    fontFamily: 'Eczar',
+                    fontSize: 32,
+                    fontWeight: FontWeight.w100),
+          ),
+          tilePadding: EdgeInsets.all(3.0),
+          //collapsedTextColor: Colors.black,
+          //textColor: Colors.black,
           children: group.children.map<Widget>((String s)=>
-          Container(child: Text(s), width: double.infinity,)
+          Container(child: Padding(
+            padding: EdgeInsets.all(3.0),
+            child:Container(
+              color: MainColors.mainColor,
+              width: double.infinity,
+              child: Text(s, style: TextStyle(
+                    color: MainColors.secondColor,
+                    fontFamily: 'Eczar',
+                    fontSize: 26,
+                    fontWeight: FontWeight.w100),
+          ),
+            )
+            
+          )
+           )
           ).toList())
       );
     }
@@ -246,11 +282,13 @@ class _DropDownListState extends State<DropDownList>{
   }
 
   Widget buildDownloadButton(BuildContext context) {
+   
      return 
-     
+      
         FittedBox( 
       
       fit: BoxFit.fill,
+      
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
             primary: MainColors.secondPageButtonColor,
