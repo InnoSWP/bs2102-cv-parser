@@ -156,7 +156,7 @@ class _DropDownListState extends State<DropDownList> {
                             fontWeight: FontWeight.w100),
                       ),
                       Text(
-                        "${jsonName.value.substring(0, jsonName.value.length - 4)}@gmail.com",
+                        "${jsonName.value.substring(0, jsonName.value.length - 4).toLowerCase()}@gmail.com",
                         style: TextStyle(
                             color: MainColors.secondColor,
                             fontFamily: 'Eczar',

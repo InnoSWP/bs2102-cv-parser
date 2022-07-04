@@ -26,14 +26,6 @@ class HomePageState extends State<HomePage> {
     FileModel(name: 'AbdulayevDamir.pdf', text: '[{"label":"Skills","match":"Java","sentence":"I had an experience in Java"},{"label":"Language","match":"Eng","sentence":"B2 english"}]', ext: '.json'),
     FileModel(name: 'Ayaz.pdf', text: '[{"label":"Skills","match":"C++","sentence":"I love C++"},{"label":"Skills","match":"Java","sentence":"I had an experience in Java"},{"label":"Language","match":"Eng","sentence":"B2 english"}]', ext: '.json'),
     FileModel(name: 'Anvar.pdf', text: '[{"label":"Skills","match":"C++","sentence":"I love C++"},{"label":"Language","match":"Eng","sentence":"B2 english"}]', ext: '.json'),
-    FileModel(name: 'Mock4.pdf', text: 'JSON text4', ext: '.json'),
-    FileModel(name: 'Mock5.pdf', text: 'JSON text5', ext: '.json'),
-    FileModel(name: 'Mock6.pdf', text: 'JSON text5', ext: '.json'),
-    FileModel(name: 'Mock7.pdf', text: 'JSON text5', ext: '.json'),
-    FileModel(name: 'Mock8.pdf', text: 'JSON text5', ext: '.json'),
-    FileModel(name: 'Mock9.pdf', text: 'JSON text5', ext: '.json'),
-    FileModel(name: 'Mock10.pdf', text: 'JSON text5', ext: '.json'),
-    FileModel(name: 'Mock11.pdf', text: 'JSON text5', ext: '.json'),
   ].obs; // For time, when API is not working
 
   @override
