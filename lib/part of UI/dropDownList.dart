@@ -199,18 +199,29 @@ class _DropDownListState extends State<DropDownList> {
               .map<Widget>((String s) => Container(
                   child: Padding(
                       padding: EdgeInsets.all(3.0),
-                      child: Container(
-                        color: MainColors.mainColor,
-                        width: double.infinity,
-                        child: Text(
-                          s,
-                          style: TextStyle(
-                              color: MainColors.secondColor,
-                              fontFamily: 'Eczar',
-                              fontSize: 26,
-                              fontWeight: FontWeight.w100),
-                        ),
-                      ))))
+                      child:ListTile(
+              title:Text(s, style: TextStyle(
+                    color: MainColors.secondColor,
+                    fontFamily: 'Eczar',
+                    fontSize: 26,
+                    fontWeight: FontWeight.w100),
+          ),
+                trailing: IconButton(
+              hoverColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                focusColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                onPressed: (){
+                  
+                  setState(() {
+                    
+                  });
+                },
+                icon: Icon(Icons.restore_from_trash_sharp),
+            ),
+            )
+                      )
+                      ))
               .toList()));
     }
     return Flexible(
