@@ -12,6 +12,7 @@ import '../model/file_model.dart';
 import '../part of UI/information_page.dart';
 import '../part of UI/logo.dart';
 import 'file_download.dart';
+import '../part of UI/dropdownList.dart';
 
 /*
   Main Page - page with all main functionality
@@ -262,6 +263,7 @@ class _MainPageState extends State<MainPage> {
             final String jsonFileName = file.name;
             jsonText.value = jsonFileText;
             jsonName.value = jsonFileName;
+            setState(() {});
           },
         ),),
         const SizedBox(
