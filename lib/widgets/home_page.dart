@@ -23,9 +23,26 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   RxList<FileModel>? files = <FileModel>[
-    FileModel(name: 'AbdulayevDamir.pdf', text: '[{"label":"Skills","match":"Java","sentence":"I had an experience in Java"},{"label":"Language","match":"Eng","sentence":"B2 english"}]', ext: '.json'),
-    FileModel(name: 'Ayaz.pdf', text: '[{"label":"Skills","match":"C++","sentence":"I love C++"},{"label":"Skills","match":"Java","sentence":"I had an experience in Java"},{"label":"Language","match":"Eng","sentence":"B2 english"}]', ext: '.json'),
-    FileModel(name: 'Anvar.pdf', text: '[{"label":"Skills","match":"C++","sentence":"I love C++"},{"label":"Language","match":"Eng","sentence":"B2 english"}]', ext: '.json'),
+    FileModel(
+        name: 'Wesam.pdf',
+        text:
+            '[{"label":"CsSkill","match":"framework","sentence":""},{"label":"CsSkill","match":"Java","sentence":""},{"label":"CsSkill","match":"frontend","sentence":""},{"label":"Language","match":"Eng","sentence":"B2 english"},{"label":"Language","match":"English","sentence":"B2 english"},{"label":"ORG","match":"Computer and Systems Engineering Department","sentence":"B2 english"},{"label":"ORG","match":"Faculty of Engineering Alexandria University","sentence":"B2 english"},{"label":"PERSON","match":"Damanhour","sentence":""},{"label":"PERSON","match":"Egypt ZIAD","sentence":""}]',
+        ext: '.json'),
+    FileModel(
+        name: 'AbdulayevDamir.pdf',
+        text:
+            '[{"label":"CsSkill","match":"flutter","sentence":""},{"label":"CsSkill","match":"Dart","sentence":""},{"label":"CsSkill","match":"frontend","sentence":""},{"label":"Language","match":"Rus","sentence":"B2 english"},{"label":"Language","match":"English","sentence":"B2 english"},{"label":"ORG","match":"Innopolis University","sentence":"B2 english"},{"label":"ORG","match":"Faculty of Computer Science","sentence":"B2 english"},{"label":"PERSON","match":"Almaty","sentence":""},{"label":"PERSON","match":"Kazakhstan","sentence":""}]',
+        ext: '.json'),
+    FileModel(
+        name: 'Ayaz.pdf',
+        text:
+            '[{"label":"CsSkill","match":"backend","sentence":""},{"label":"CsSkill","match":"Javascript","sentence":""},{"label":"CsSkill","match":"C++","sentence":""},{"label":"GPE","match":"Russia","sentence":"B2 english"},{"label":"GPE","match":"Moscow","sentence":"B2 english"},{"label":"Language","match":"English","sentence":"B2 english"},{"label":"ORG","match":"System Integration","sentence":"B2 english"},{"label":"ORG","match":"Search Engines","sentence":"B2 english"},{"label":"PERSON","match":"Almaty","sentence":""},{"label":"PERSON","match":"Kazakhstan","sentence":""}]',
+        ext: '.json'),
+    FileModel(
+        name: 'Anvar.pdf',
+        text:
+            '[{"label":"Skills","match":"C++","sentence":"I love C++"},{"label":"Language","match":"Eng","sentence":"B2 english"}]',
+        ext: '.json'),
   ].obs; // For time, when API is not working
 
   @override
