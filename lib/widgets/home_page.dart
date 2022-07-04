@@ -2,6 +2,7 @@
 import 'dart:developer' as devtools show log;
 
 import 'package:flutter/material.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
 import '../constants/colors.dart';
 import '../model/file_model.dart';
@@ -21,19 +22,11 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  List<FileModel>? files = <FileModel>[
-    FileModel(name: 'Mock.pdf', text: 'JSON text', ext: '.json'),
-    FileModel(name: 'Mock2.pdf', text: 'JSON text2', ext: '.json'),
-    FileModel(name: 'Mock3.pdf', text: 'JSON text3', ext: '.json'),
-    FileModel(name: 'Mock4.pdf', text: 'JSON text4', ext: '.json'),
-    FileModel(name: 'Mock5.pdf', text: 'JSON text5', ext: '.json'),
-    FileModel(name: 'Mock6.pdf', text: 'JSON text5', ext: '.json'),
-    FileModel(name: 'Mock7.pdf', text: 'JSON text5', ext: '.json'),
-    FileModel(name: 'Mock8.pdf', text: 'JSON text5', ext: '.json'),
-    FileModel(name: 'Mock9.pdf', text: 'JSON text5', ext: '.json'),
-    FileModel(name: 'Mock10.pdf', text: 'JSON text5', ext: '.json'),
-    FileModel(name: 'Mock11.pdf', text: 'JSON text5', ext: '.json'),
-  ]; // For time, when API is not working
+  RxList<FileModel>? files = <FileModel>[
+    FileModel(name: 'AbdulayevDamir.pdf', text: '[{"label":"Skills","match":"Java","sentence":"I had an experience in Java"},{"label":"Language","match":"Eng","sentence":"B2 english"}]', ext: '.json'),
+    FileModel(name: 'Ayaz.pdf', text: '[{"label":"Skills","match":"C++","sentence":"I love C++"},{"label":"Skills","match":"Java","sentence":"I had an experience in Java"},{"label":"Language","match":"Eng","sentence":"B2 english"}]', ext: '.json'),
+    FileModel(name: 'Anvar.pdf', text: '[{"label":"Skills","match":"C++","sentence":"I love C++"},{"label":"Language","match":"Eng","sentence":"B2 english"}]', ext: '.json'),
+  ].obs; // For time, when API is not working
 
   @override
   Widget build(BuildContext context) {
@@ -45,26 +38,23 @@ class HomePageState extends State<HomePage> {
           child: Container(
               padding: const EdgeInsets.only(left: 30.0, right: 30.0),
               // Column for Drop zone and Button 'Parse CVs'
-
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   //Drop Zone
                   SizedBox(
-                    height: 506,
-                    width: 1100,
+                    height: 450,
+                    width: 977,
                     child: DropZoneWidget(
                       // ignore: unnecessary_this
                       onProcessFiles: (List<FileModel>? files) =>
-                          setState(() => this.files = files),
+                          setState(() => this.files = RxList.from(files!)),
                     ),
                   ),
-
                   //Space between
                   const SizedBox(
-                    height: 40,
+                    height: 20,
                   ),
-
                   //Button Parse CVs
                   buildParseCVsButton(context),
                 ],

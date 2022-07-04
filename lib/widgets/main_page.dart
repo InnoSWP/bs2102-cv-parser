@@ -1,3 +1,9 @@
+import 'dart:convert';
+
+import 'package:cvparser/model/file_model.dart';
+import 'package:cvparser/utils/Search.dart';
+import 'package:cvparser/widgets/file_download.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -6,6 +12,7 @@ import '../model/file_model.dart';
 import '../part of UI/information_page.dart';
 import '../part of UI/logo.dart';
 import 'file_download.dart';
+import '../part of UI/dropdownList.dart';
 
 /*
   Main Page - page with all main functionality
@@ -15,25 +22,27 @@ class MainPage extends StatefulWidget {
   //PDF files from main page
 
   const MainPage({super.key, required this.files});
+
   static const String route = '/view_cv'; // todo
 
-  final List<FileModel>? files;
+  final RxList<FileModel>? files;
 
   @override
   State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
-  RxString jsonText = ''.obs; //Get_X pub dev for jsonText update
-  RxString jsonName = ''.obs;
+  List<FileModel>? currentFiles;
+
+  var jsonText = ''.obs; //Get_X pub dev for jsonText update
+  var jsonName = ''.obs;
 
   late FileModel activeFile;
 
   @override
   void initState() {
-    if (widget.files != null) {
-      activeFile = widget.files!.first;
-    }
+    currentFiles = widget.files;
+    if (widget.files != null) activeFile = widget.files!.first;
     super.initState();
   }
 
@@ -43,12 +52,12 @@ class _MainPageState extends State<MainPage> {
       backgroundColor: MainColors.secondPageBackGround,
       appBar: buildAppBar(context),
       body: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           // Left side of MainPage with text and button to download
-          InformationWidget(
-            jsonText: jsonText,
-            jsonName: jsonName,
-          ),
+          
+          DropDownList(jsonText: jsonText, jsonName: jsonName),
 
           // Right side of MainPage with search and PDF scroll and 2 buttons
           buildPDFScroll(context),
@@ -60,7 +69,16 @@ class _MainPageState extends State<MainPage> {
   Flexible buildPDFScroll(BuildContext context) {
     return Flexible(
       flex: 2,
-      child: Column(
+      child: Container(
+          decoration: const BoxDecoration(
+            border: Border(
+              left: BorderSide(
+                color: MainColors.secondColor,
+                width: 3.0,
+              ),
+            ),
+          ),
+        child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           // Search field and search button
@@ -79,17 +97,16 @@ class _MainPageState extends State<MainPage> {
           ),
           Expanded(
             flex: 2,
-            child: FittedBox(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  buildDownloadButton(),
-                  buildUploadMoreButton(),
-                ],
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                buildDownloadButton(),
+                buildUploadMoreButton(),
+              ],
             ),
           ),
         ],
+      ),
       ),
     );
   }
@@ -100,14 +117,24 @@ class _MainPageState extends State<MainPage> {
           primary: MainColors.secondPageButtonColor,
           side: const BorderSide(color: MainColors.secondColor)),
       onPressed: () {
-        if (jsonText.value == '') {
+        if (currentFiles!.isEmpty) {
           showAlertDialog(context);
         } else {
-          download(jsonText.value, downloadName: '${jsonName.value}.json');
+          int? size = currentFiles?.length;
+          for (int i = 0; i < size!; i++) {
+            String text;
+            String name;
+            if (currentFiles![i].text != null &&
+                currentFiles![i].name != null) {
+              text = currentFiles![i].text;
+              name = currentFiles![i].name;
+              download(text, downloadName: "$name.json");
+            }
+          }
         }
       },
       child: const Text(
-        'Export as JSON',
+        'Export all JSONs',
         style: TextStyle(
             color: MainColors.secondColor,
             fontFamily: 'Eczar',
@@ -141,28 +168,28 @@ class _MainPageState extends State<MainPage> {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          const Flexible(
+        children: [
+          Flexible(
             flex: 12,
             child: TextField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
+                filled: true,
+                fillColor: MainColors.mainColor,
+                focusColor: MainColors.secondColor,
                 border: OutlineInputBorder(),
                 hintText: 'find a skill',
               ),
+              onChanged: (String input) {
+                setState(() {
+                  if (input == "") {
+                    currentFiles = widget.files;
+                  } else {
+                    currentFiles = search(widget.files, input);
+                  }
+                });
+              },
             ),
           ),
-          Flexible(
-              flex: 2,
-              child: FittedBox(
-                fit: BoxFit.none,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      primary: MainColors.secondColor,
-                      fixedSize: const Size(10, 50)),
-                  onPressed: () {},
-                  child: const Icon(Icons.search),
-                ),
-              )),
         ],
       ),
     );
@@ -195,51 +222,72 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget buildFiles(BuildContext context) {
-    return GridView.count(
+    return Obx(() => GridView.count(
       primary: false,
       crossAxisCount: 3,
       children: <Widget>[
-        if (widget.files != null)
-          for (FileModel file in widget.files!) buildFileDetail(file, context),
+        if (currentFiles != null)
+          for (var file in currentFiles!) buildFileDetail(file, context),
       ],
-    );
+    ),);
   }
 
   Widget buildFileDetail(FileModel? file, BuildContext context) {
-    return FittedBox(
-      fit: BoxFit.none,
-      child: Column(
-        children: <Widget>[
-          const SizedBox(
-            height: 10,
+    return Column(
+      children: <Widget>[
+        const SizedBox(
+          height: 10,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            IconButton(
+              hoverColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                focusColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                onPressed: (){
+                  for(int i = 0; i < widget.files!.length; i++){
+                    if(widget.files![i] == file){
+                      widget.files!.remove(file);
+                    }
+                  }
+                },
+                icon: Icon(Icons.restore_from_trash_sharp, color: MainColors.secondColor,),
+            )
+          ],
+        ),
+        Expanded(
+          child: InkWell(
+          child: Image.asset(
+            'images/pdf.png',
+            width: 70,
+            height: 70,
+            fit: BoxFit.scaleDown,
           ),
-          InkWell(
-            child: Image.asset(
-              'images/pdf.png',
-              width: 70,
-              height: 70,
-            ),
-            onTap: () async {
-              activeFile = file!;
-              final String jsonFileText = file.text;
-              final String jsonFileName = file.name;
-              jsonText.value = jsonFileText;
-              jsonName.value = jsonFileName;
-            },
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-            ' ${file?.name ?? 'No name'}',
-            style: const TextStyle(
-                color: MainColors.secondColor,
-                fontFamily: 'Merriweather',
-                fontSize: 22,
-                fontWeight: FontWeight.w100),
-          ),
-        ],
-      ),
+          onTap: () async {
+            activeFile = file!;
+            final String jsonFileText = file.text;
+            final String jsonFileName = file.name;
+            jsonText.value = jsonFileText;
+            jsonName.value = jsonFileName;
+            setState(() {});
+          },
+        ),),
+        const SizedBox(
+          height: 10,
+        ),
+        Text(
+          maxLines: 1,
+          overflow: TextOverflow.clip,
+          ' ${file?.name ?? 'No name'}',
+          style: const TextStyle(
+              color: MainColors.secondColor,
+              fontFamily: 'Merriweather',
+              fontSize: 22,
+              fontWeight: FontWeight.w100),
+        ),
+      ],
     );
   }
 

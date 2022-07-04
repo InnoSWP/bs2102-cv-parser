@@ -236,6 +236,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "flutter_archive",
+      "rootUri": "file:///C:/Users/Anvar/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_archive-5.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
       "name": "flutter_dropzone",
       "rootUri": "file:///C:/Users/Anvar/AppData/Local/Pub/Cache/hosted/pub.dartlang.org/flutter_dropzone-3.0.5",
       "packageUri": "lib/",
@@ -614,7 +620,7 @@
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2022-06-25T18:00:09.062146Z",
+  "generated": "2022-06-30T08:51:03.799483Z",
   "generator": "pub",
   "generatorVersion": "2.17.3"
 }

@@ -44,12 +44,10 @@ class InformationWidget extends StatelessWidget {
 
   Flexible buildDownloadButton(BuildContext context) {
     return Flexible(
-        child: FittedBox(
-      fit: BoxFit.fill,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
             primary: MainColors.secondPageButtonColor,
-            fixedSize: const Size(453, 108),
+            fixedSize: const Size(400, 80),
             side: const BorderSide(color: MainColors.secondColor)),
         // Button 'Parse CVs' will send you to Main Page
         onPressed: () {
@@ -59,7 +57,6 @@ class InformationWidget extends StatelessWidget {
             download(jsonText.value, downloadName: '${jsonName.value}.json');
           }
         },
-
         // 'Parse CVs' button with icon itself
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -71,7 +68,7 @@ class InformationWidget extends StatelessWidget {
                 style: TextStyle(
                     color: MainColors.secondColor,
                     fontFamily: 'Eczar',
-                    fontSize: 32,
+                    fontSize: 30,
                     fontWeight: FontWeight.w100),
                 textAlign: TextAlign.center,
               ),
@@ -81,13 +78,13 @@ class InformationWidget extends StatelessWidget {
             ),
             Icon(
               Icons.download_sharp,
-              size: 80,
+              size: 60,
               color: MainColors.secondColor,
             ),
           ],
         ),
       ),
-    ));
+    );
   }
 
   Flexible buildTextSpace() {

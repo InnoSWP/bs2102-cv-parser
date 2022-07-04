@@ -48,6 +48,7 @@ dependencies:
   get: ^4.6.5
   flutter_svg: ^1.1.0
   flutter_easyloading: ^3.0.5
+  flutter_archive: ^5.0.0
 
 dev_dependencies:
   flutter_test:
