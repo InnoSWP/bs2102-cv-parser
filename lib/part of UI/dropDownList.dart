@@ -1,6 +1,8 @@
 import 'dart:html';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
 import '../constants/colors.dart';
@@ -146,7 +148,7 @@ class _DropDownListState extends State<DropDownList> {
                   Column(
                     children: [
                       Text(
-                        jsonName.value,
+                        jsonName.value.substring(0, jsonName.value.length - 4),
                         style: TextStyle(
                             color: MainColors.secondColor,
                             fontFamily: 'Eczar',
@@ -154,7 +156,7 @@ class _DropDownListState extends State<DropDownList> {
                             fontWeight: FontWeight.w100),
                       ),
                       Text(
-                        "emailaddress@gmail.com",
+                        "${jsonName.value.substring(0, jsonName.value.length - 4)}@gmail.com",
                         style: TextStyle(
                             color: MainColors.secondColor,
                             fontFamily: 'Eczar',
@@ -212,12 +214,9 @@ class _DropDownListState extends State<DropDownList> {
                 focusColor: Colors.transparent,
                 splashColor: Colors.transparent,
                 onPressed: (){
-                  
-                  setState(() {
-                    
-                  });
+                  showAlertDialog(context);
                 },
-                icon: Icon(Icons.restore_from_trash_sharp),
+                icon: Icon(Icons.flag, color: MainColors.secondColor,),
             ),
             )
                       )
@@ -359,19 +358,28 @@ class _DropDownListState extends State<DropDownList> {
 
     // Create AlertDialog
     final AlertDialog alert = AlertDialog(
-      title: const Text(
-        'Error',
-        style: TextStyle(
-            color: Colors.black,
-            fontFamily: 'Merriweather',
-            fontWeight: FontWeight.w100),
-      ),
-      content: const Text(
-        'You do not choose the file to export',
-        style: TextStyle(
-            color: Colors.black,
-            fontFamily: 'Merriweather',
-            fontWeight: FontWeight.w100),
+      content: SizedBox(
+        width: 400,
+        height: 150,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(
+              "Write down the report reason",
+              style: TextStyle(
+                  color: MainColors.secondColor,
+                  fontFamily: 'Merriweather',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w100),
+            ),
+            TextField(
+              onSubmitted: (value) {
+                reportWait();
+                Navigator.pop(context);
+              },
+            )
+          ],
+        ),
       ),
       actions: <Widget>[
         closeButton,
@@ -385,5 +393,14 @@ class _DropDownListState extends State<DropDownList> {
         return alert;
       },
     );
+  }
+
+  Future<void> reportWait() async {
+    EasyLoading.show(
+      status: 'Wait, sending report to database...',
+      maskType: EasyLoadingMaskType.black,
+    );
+    await Future.delayed(Duration(seconds: 1));
+    EasyLoading.showSuccess('Report are sent');
   }
 }
