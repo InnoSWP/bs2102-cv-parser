@@ -69,7 +69,16 @@ class _MainPageState extends State<MainPage> {
   Flexible buildPDFScroll(BuildContext context) {
     return Flexible(
       flex: 2,
-      child: Column(
+      child: Container(
+          decoration: const BoxDecoration(
+            border: Border(
+              left: BorderSide(
+                color: MainColors.secondColor,
+                width: 3.0,
+              ),
+            ),
+          ),
+        child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           // Search field and search button
@@ -88,15 +97,16 @@ class _MainPageState extends State<MainPage> {
           ),
           Expanded(
             flex: 2,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  buildDownloadButton(),
-                  buildUploadMoreButton(),
-                ],
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                buildDownloadButton(),
+                buildUploadMoreButton(),
+              ],
+            ),
           ),
         ],
+      ),
       ),
     );
   }
@@ -239,13 +249,11 @@ class _MainPageState extends State<MainPage> {
                 onPressed: (){
                   for(int i = 0; i < widget.files!.length; i++){
                     if(widget.files![i] == file){
-                      print(widget.files!.length);
                       widget.files!.remove(file);
-                      print(widget.files!.length);
                     }
                   }
                 },
-                icon: Icon(Icons.restore_from_trash_sharp),
+                icon: Icon(Icons.restore_from_trash_sharp, color: MainColors.secondColor,),
             )
           ],
         ),
