@@ -401,6 +401,6 @@ class _DropDownListState extends State<DropDownList> {
       maskType: EasyLoadingMaskType.black,
     );
     await Future.delayed(Duration(seconds: 1));
-    EasyLoading.showSuccess('Report is sent');
+    EasyLoading.showSuccess('Report has been sent');
   }
 }
